@@ -1,0 +1,28 @@
+{
+  "name": "hyperce/eatonline",
+  "type": "tastyigniter-extension",
+  "description": "No description provided yet...",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "hyperce"
+    }
+  ],
+  "extra": {
+    "tastyigniter-extension": {
+      "code": "hyperce.eatonline",
+      "name": "hyperce-eatonline",
+      "icon": {
+        "class": "fa fa-plug",
+        "backgroundColor": "green",
+        "color": "#FFF"
+      },
+      "locked": true,
+      "require": {
+        "igniter.api": "*",
+        "igniter.cart": "*",
+        "igniter.local": "*"
+      }
+    }
+  }
+}
