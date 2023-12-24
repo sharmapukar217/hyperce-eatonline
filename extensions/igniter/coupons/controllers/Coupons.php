@@ -57,7 +57,6 @@ class Coupons extends \Admin\Classes\AdminController
     public function __construct()
     {
         parent::__construct();
-
         AdminMenu::setContext('coupons', 'marketing');
     }
 

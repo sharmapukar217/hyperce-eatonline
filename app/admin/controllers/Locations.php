@@ -140,7 +140,6 @@ class Locations extends \Admin\Classes\AdminController
     {
         return collect($fields)->mapToGroups(function ($field) {
             $key = array_get($field->config, 'accordion');
-
             return [$key => $field];
         })->all();
     }

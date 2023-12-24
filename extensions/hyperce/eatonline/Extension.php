@@ -9,6 +9,7 @@ use Admin\Widgets\Form;
  */
 class Extension extends \System\Classes\BaseExtension
 {
+
     /**
      * Register method, called when the extension is first registered.
      *
@@ -16,7 +17,7 @@ class Extension extends \System\Classes\BaseExtension
      */
     public function register()
     {
-        // dd(OrderAction::class);
+
     }
 
     /**
@@ -30,30 +31,36 @@ class Extension extends \System\Classes\BaseExtension
             $model->mergeFillable(['ebee_vat_id', 'ebee_company_name']);
         });
 
-        \Admin\Controllers\Locations::extendFormFields(function(Form $form) {
+        \Admin\Controllers\Locations::extendFormFields(function (Form $form) {
+            if (!$form->model instanceof \Admin\Models\Locations_model) return;
             $form->addTabFields([
                 'ebee_website' => [
                     'type' => 'text',
-                    'priority' => 5000,
                     'name' => 'ebee_website',
                     'label' => 'hyperce.eatonline::default.locations.label_ebee_website',
-                    'tab' => 'hyperce.eatonline::default.locations.text_tab_ebee_website',
+                    'tab' => 'hyperce.eatonline::default.locations.text_tab_ebee_website'
+                ],
+                'header' => [
+                    'type' => 'connector',
+                    'tab' => 'Header',
+                    // 'partial' => 'form/layouts',
+                    'nameFrom' => 'label',
+                    // 'context' => ['edit', 'preview'],
                 ]
             ]);
         });
 
-        \Admin\Controllers\Orders::extendFormFields(function(Form $form) {
+        \Admin\Controllers\Orders::extendFormFields(function (Form $form) {
             $form->addTabFields([
                 'ebee_company_name' => [
                     'type' => 'text',
                     'disabled' => 'disabled',
-                    'value' => 'hardcoded-value',
                     'name' => 'ebee_company_name',
                     'label' => 'hyperce.eatonline::default.orders.label_company_name',
                     'tab' => 'hyperce.eatonline::default.orders.text_tab_company',
                 ],
                 'ebee_vat_id' => [
-                     'type' => 'text',
+                    'type' => 'text',
                     'name' => 'ebee_vat_id',
                     'disabled' => 'disabled',
                     'label' => 'hyperce.eatonline::default.orders.label_vat_id',
@@ -85,17 +92,32 @@ class Extension extends \System\Classes\BaseExtension
     }
 
     /**
+     * Registers back-end navigation menu items for this extension.
+     *
+     * @return array
+     */
+    public function registerNavigation()
+    {
+        return [
+            'restaurant' => [
+                'child' => [
+                    'headers' => [
+                        'priority' => 10,
+                        'class' => 'Header',
+                        'href' => admin_url('igniter/headers'),
+                        'title' => lang('hyperce.eatonline::default.headers.side_menu'),
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
      * Registers any admin permissions used by this extension.
      *
      * @return array
      */
     public function registerPermissions()
-    {
-        return [
-        ];
-    }
-
-    public function registerCartConditions()
     {
         return [];
     }
