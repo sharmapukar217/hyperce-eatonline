@@ -11,7 +11,6 @@ class InitialSchemaSeeder extends Seeder
 
     /**
      * Run the initial schema seeds.
-     *
      * @return void
      */
     public function run()
@@ -39,9 +38,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedCountries()
     {
-        if (DB::table('countries')->count()) {
+        if (DB::table('countries')->count())
             return;
-        }
 
         DB::table('countries')->insert($this->getSeedRecords('countries', true));
 
@@ -55,9 +53,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedCurrencies()
     {
-        if (DB::table('currencies')->count()) {
+        if (DB::table('currencies')->count())
             return;
-        }
 
         $currencies = $this->getSeedRecords('currencies');
 
@@ -74,9 +71,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedCustomerGroups()
     {
-        if (DB::table('customer_groups')->count()) {
+        if (DB::table('customer_groups')->count())
             return;
-        }
 
         DB::table('customer_groups')->insert([
             'group_name' => 'Default group',
@@ -88,9 +84,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedLanguages()
     {
-        if (DB::table('languages')->count()) {
+        if (DB::table('languages')->count())
             return;
-        }
 
         DB::table('languages')->insert([
             'code' => 'en',
@@ -106,9 +101,8 @@ class InitialSchemaSeeder extends Seeder
     protected function seedDefaultLocation()
     {
         // Abort: a location already exists
-        if (DB::table('locations')->count()) {
+        if (DB::table('locations')->count())
             return true;
-        }
 
         $location = $this->getSeedRecords('location');
         $location['location_email'] = DatabaseSeeder::$siteEmail;
@@ -120,9 +114,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedLocationTables($locationId)
     {
-        if (DB::table('tables')->count()) {
+        if (DB::table('tables')->count())
             return;
-        }
 
         for ($i = 1; $i < 15; $i++) {
             $tableId = DB::table('tables')->insertGetId([
@@ -144,9 +137,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedMealtimes()
     {
-        if (DB::table('mealtimes')->count()) {
+        if (DB::table('mealtimes')->count())
             return;
-        }
 
         DB::table('mealtimes')->insert([
             [
@@ -174,18 +166,16 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedSettings()
     {
-        if (DB::table('settings')->count()) {
+        if (DB::table('settings')->count())
             return;
-        }
 
         DB::table('settings')->insert($this->getSeedRecords('settings'));
     }
 
     protected function seedStaffGroups()
     {
-        if (DB::table('staff_groups')->count()) {
+        if (DB::table('staff_groups')->count())
             return;
-        }
 
         DB::table('staff_groups')->insert([
             'staff_group_name' => 'Owners',
@@ -212,9 +202,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedStaffRoles()
     {
-        if (DB::table('staff_roles')->count()) {
+        if (DB::table('staff_roles')->count())
             return;
-        }
 
         DB::table('staff_roles')->insert([
             'name' => 'Owner',
@@ -248,9 +237,8 @@ class InitialSchemaSeeder extends Seeder
 
     protected function seedStatuses()
     {
-        if (DB::table('statuses')->count()) {
+        if (DB::table('statuses')->count())
             return;
-        }
 
         DB::table('statuses')->insert($this->getSeedRecords('statuses'));
 

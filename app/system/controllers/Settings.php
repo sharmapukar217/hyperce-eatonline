@@ -20,8 +20,8 @@ use System\Models\Mail_templates_model;
 
 class Settings extends \Admin\Classes\AdminController
 {
-    use FormExtendable;
     use WidgetMaker;
+    use FormExtendable;
 
     protected $requiredPermissions = 'Site.Settings';
 
@@ -71,13 +71,12 @@ class Settings extends \Admin\Classes\AdminController
         try {
             $this->settingCode = $settingCode;
             [$model, $definition] = $this->findSettingDefinitions($settingCode);
-            if (! $definition) {
+            if (!$definition) {
                 throw new Exception(sprintf(lang('system::lang.settings.alert_settings_not_found'), $settingCode));
             }
 
-            if ($definition->permission && ! AdminAuth::user()->hasPermission($definition->permission)) {
+            if ($definition->permission && !AdminAuth::user()->hasPermission($definition->permission))
                 return Response::make(View::make('admin::access_denied'), 403);
-            }
 
             $pageTitle = sprintf(lang('system::lang.settings.text_edit_title'), lang($definition->label));
             Template::setTitle($pageTitle);
@@ -86,10 +85,10 @@ class Settings extends \Admin\Classes\AdminController
             $this->initWidgets($model, $definition);
 
             $this->validateSettingItems();
-            if ($errors = array_get($this->settingItemErrors, $settingCode)) {
+            if ($errors = array_get($this->settingItemErrors, $settingCode))
                 Session::flash('errors', $errors);
-            }
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -98,21 +97,19 @@ class Settings extends \Admin\Classes\AdminController
     {
         $this->settingCode = $settingCode;
         [$model, $definition] = $this->findSettingDefinitions($settingCode);
-        if (! $definition) {
+        if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
-        if ($definition->permission && ! AdminAuth::user()->hasPermission($definition->permission)) {
+        if ($definition->permission && !AdminAuth::user()->hasPermission($definition->permission))
             return Response::make(View::make('admin::access_denied'), 403);
-        }
 
         $this->initWidgets($model, $definition);
 
         $this->validateFormRequest($model, $definition);
 
-        if ($this->formValidate($model, $this->formWidget) === false) {
+        if ($this->formValidate($model, $this->formWidget) === false)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
-        }
 
         $this->formBeforeSave($model);
 
@@ -133,7 +130,7 @@ class Settings extends \Admin\Classes\AdminController
     public function edit_onTestMail()
     {
         [$model, $definition] = $this->findSettingDefinitions('mail');
-        if (! $definition) {
+        if (!$definition) {
             throw new Exception(lang('system::lang.settings.alert_settings_not_found'));
         }
 
@@ -141,9 +138,8 @@ class Settings extends \Admin\Classes\AdminController
 
         $this->validateFormRequest($model, $definition);
 
-        if ($this->formValidate($model, $this->formWidget) === false) {
+        if ($this->formValidate($model, $this->formWidget) === false)
             return Request::ajax() ? ['#notification' => $this->makePartial('flash')] : false;
-        }
 
         setting()->set($this->formWidget->getSaveData());
 
@@ -156,7 +152,8 @@ class Settings extends \Admin\Classes\AdminController
             });
 
             flash()->success(sprintf(lang('system::lang.settings.alert_email_sent'), $email));
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             flash()->error($ex->getMessage());
         }
 
@@ -187,9 +184,8 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function findSettingDefinitions($code)
     {
-        if (! strlen($code)) {
+        if (!strlen($code))
             throw new Exception(lang('admin::lang.form.missing_id'));
-        }
 
         // Prep the list widget config
         $model = $this->createModel();
@@ -201,7 +197,7 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function createModel()
     {
-        if (! isset($this->modelClass) || ! strlen($this->modelClass)) {
+        if (!isset($this->modelClass) || !strlen($this->modelClass)) {
             throw new Exception(lang('system::lang.settings.alert_settings_missing_model'));
         }
 
@@ -217,7 +213,7 @@ class Settings extends \Admin\Classes\AdminController
     {
         $settingItemErrors = Session::get('settings.errors', []);
 
-        if ($skipSession || ! $settingItemErrors) {
+        if ($skipSession || !$settingItemErrors) {
             $model = $this->createModel();
             $settingItems = array_get($model->listSettingItems(), 'core');
             $settingValues = array_undot($model->getFieldValues());
@@ -225,9 +221,8 @@ class Settings extends \Admin\Classes\AdminController
             foreach ($settingItems as $settingItem) {
                 $settingItemForm = $this->createModel()->getFieldConfig($settingItem->code);
 
-                if (! isset($settingItemForm['rules'])) {
+                if (!isset($settingItemForm['rules']))
                     continue;
-                }
 
                 $validator = $this->makeValidator($settingValues, $settingItemForm['rules']);
                 $errors = $validator->fails() ? $validator->errors() : [];
@@ -243,18 +238,15 @@ class Settings extends \Admin\Classes\AdminController
 
     protected function validateFormRequest($model, $definition)
     {
-        if (! strlen($requestClass = $definition->request)) {
+        if (!strlen($requestClass = $definition->request))
             return;
-        }
 
-        if (! class_exists($requestClass)) {
+        if (!class_exists($requestClass))
             throw new ApplicationException(sprintf(lang('admin::lang.form.request_class_not_found'), $requestClass));
-        }
 
         app()->resolving($requestClass, function ($request, $app) {
-            if (method_exists($request, 'setController')) {
+            if (method_exists($request, 'setController'))
                 $request->setController($this);
-            }
 
             $request->setInputKey('Setting');
         });

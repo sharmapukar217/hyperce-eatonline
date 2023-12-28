@@ -1,5 +1,4 @@
 <?php
-
 $config['list']['toolbar'] = [
     'buttons' => [
         'create' => [

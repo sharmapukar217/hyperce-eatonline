@@ -14,21 +14,18 @@ class ThemeRemove extends Command
 
     /**
      * The console command name.
-     *
      * @var string
      */
     protected $name = 'theme:remove';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Removes an existing theme.';
 
     /**
      * Execute the console command.
-     *
      * @return void
      */
     public function handle()
@@ -38,14 +35,14 @@ class ThemeRemove extends Command
         $themeManager = ThemeManager::instance();
 
         $themeName = strtolower($themeName);
-        if (! $themeManager->hasTheme($themeName)) {
+        if (!$themeManager->hasTheme($themeName)) {
             return $this->error(sprintf('Unable to find a registered theme called "%s"', $themeName));
         }
 
-        if (! $forceDelete && ! $this->confirmToProceed(sprintf(
-            'This will DELETE theme "%s" from the filesystem and database.',
-            $themeName
-        ))) {
+        if (!$forceDelete && !$this->confirmToProceed(sprintf(
+                'This will DELETE theme "%s" from the filesystem and database.',
+                $themeName
+            ))) {
             return;
         }
 
@@ -55,7 +52,6 @@ class ThemeRemove extends Command
 
     /**
      * Get the console command arguments.
-     *
      * @return array
      */
     protected function getArguments()
@@ -67,7 +63,6 @@ class ThemeRemove extends Command
 
     /**
      * Get the console command options.
-     *
      * @return array
      */
     protected function getOptions()
@@ -79,7 +74,6 @@ class ThemeRemove extends Command
 
     /**
      * Get the default confirmation callback.
-     *
      * @return \Closure
      */
     protected function getDefaultConfirmCallback()

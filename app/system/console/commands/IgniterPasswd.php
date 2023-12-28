@@ -41,9 +41,8 @@ class IgniterPasswd extends Command
 
         $user = Users_model::whereUsername($username)->first()
             ?? Staffs_model::whereStaffEmail($username)->first();
-        if (! $user) {
+        if (!$user)
             throw new ApplicationException('The specified user does not exist.');
-        }
 
         if (is_null($password = $this->argument('password'))) {
             $password = $this->optionalSecret('Enter new password (leave blank for generated password)')
@@ -75,8 +74,8 @@ class IgniterPasswd extends Command
      *
      * Also allows for a default to be specified.
      *
-     * @param  string  $question
-     * @param  bool  $fallback
+     * @param string $question
+     * @param bool $fallback
      * @return string
      */
     protected function optionalSecret($question)

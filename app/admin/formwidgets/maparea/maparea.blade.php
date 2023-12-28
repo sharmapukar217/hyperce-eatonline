@@ -17,3 +17,4 @@
         {!! $this->makePartial('maparea/toolbar') !!}
     </div>
 </div>
+  

@@ -11,14 +11,11 @@ class DemoSchemaSeeder extends Seeder
 
     /**
      * Run the demo schema seeds.
-     *
      * @return void
      */
     public function run()
     {
-        if (! DatabaseSeeder::$seedDemo) {
-            return;
-        }
+        if (!DatabaseSeeder::$seedDemo) return;
 
         $this->seedCategories();
 
@@ -45,9 +42,8 @@ class DemoSchemaSeeder extends Seeder
 
     protected function seedCategories()
     {
-        if (DB::table('categories')->count()) {
+        if (DB::table('categories')->count())
             return;
-        }
 
         DB::table('categories')->insert($this->getSeedRecords('categories'));
 
@@ -56,9 +52,8 @@ class DemoSchemaSeeder extends Seeder
 
     protected function seedMenuOptions()
     {
-        if (DB::table('menu_options')->count()) {
+        if (DB::table('menu_options')->count())
             return;
-        }
 
         foreach ($this->getSeedRecords('menu_options') as $menuOption) {
             $optionId = DB::table('menu_options')->insertGetId(array_except($menuOption, 'option_values'));
@@ -75,9 +70,8 @@ class DemoSchemaSeeder extends Seeder
 
     protected function seedMenuItems()
     {
-        if (DB::table('menus')->count()) {
+        if (DB::table('menus')->count())
             return;
-        }
 
         foreach ($this->getSeedRecords('menus') as $menu) {
             $menuId = DB::table('menus')->insertGetId(array_except($menu, 'menu_options'));

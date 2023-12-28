@@ -31,13 +31,14 @@ class DropForeignKeyConstraintsOnAllTables extends Migration
     {
         try {
             Schema::table($tableName, function (Blueprint $table) use ($options, $tableName) {
-                $keys = (array) $options[1];
+                $keys = (array)$options[1];
                 $foreignKey = $keys[0];
 
                 $table->dropForeignKeyIfExists($foreignKey);
                 $table->dropIndexIfExists(sprintf('%s%s_%s_foreign', DB::getTablePrefix(), $tableName, $foreignKey));
             });
-        } catch (\Exception $ex) {
+        }
+        catch (\Exception $ex) {
             Log::error($ex);
         }
     }

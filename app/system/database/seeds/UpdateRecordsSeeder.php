@@ -15,7 +15,6 @@ class UpdateRecordsSeeder extends Seeder
 {
     /**
      * Run the demo schema seeds.
-     *
      * @return void
      */
     public function run()
@@ -29,9 +28,8 @@ class UpdateRecordsSeeder extends Seeder
 
     protected function updateMorphsOnStatusHistory()
     {
-        if (DB::table('status_history')->where('object_type', 'Admin\Models\Orders_model')->count()) {
+        if (DB::table('status_history')->where('object_type', 'Admin\Models\Orders_model')->count())
             return;
-        }
 
         $morphs = [
             'order' => 'Admin\Models\Orders_model',
@@ -40,9 +38,8 @@ class UpdateRecordsSeeder extends Seeder
 
         DB::table('status_history')->get()->each(function ($model) use ($morphs) {
             $status = DB::table('statuses')->where('status_id', $model->status_id)->first();
-            if (! $status || ! isset($morphs[$status->status_for])) {
+            if (!$status || !isset($morphs[$status->status_for]))
                 return false;
-            }
 
             DB::table('status_history')->where('status_history_id', $model->status_history_id)->update([
                 'object_type' => $morphs[$status->status_for],

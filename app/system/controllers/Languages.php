@@ -14,8 +14,8 @@ use System\Traits\SessionMaker;
 
 class Languages extends \Admin\Classes\AdminController
 {
-    use ManagesUpdates;
     use SessionMaker;
+    use ManagesUpdates;
 
     public $implement = [
         'Admin\Actions\ListController',
@@ -85,9 +85,8 @@ class Languages extends \Admin\Classes\AdminController
     public function search()
     {
         $filter = input('filter');
-        if (! $filter || ! is_array($filter) || ! isset($filter['search']) || ! strlen($filter['search'])) {
+        if (!$filter || !is_array($filter) || !isset($filter['search']) || !strlen($filter['search']))
             return [];
-        }
 
         return LanguageManager::instance()->searchLanguages($filter['search']);
     }
@@ -111,13 +110,13 @@ class Languages extends \Admin\Classes\AdminController
         $this->asExtension('FormController')->initForm($model, $context);
 
         $file = post('Language._file');
-        $this->setFilterValue('file', (! strlen($file) || strpos($file, '::') == false) ? null : $file);
+        $this->setFilterValue('file', (!strlen($file) || strpos($file, '::') == false) ? null : $file);
 
         $term = post('Language._search');
-        $this->setFilterValue('search', (! strlen($term) || ! is_string($term)) ? null : $term);
+        $this->setFilterValue('search', (!strlen($term) || !is_string($term)) ? null : $term);
 
         $stringFilter = post('Language._string_filter');
-        $this->setFilterValue('string_filter', (! strlen($stringFilter) || ! is_string($stringFilter)) ? null : $stringFilter);
+        $this->setFilterValue('string_filter', (!strlen($stringFilter) || !is_string($stringFilter)) ? null : $stringFilter);
 
         return $this->asExtension('FormController')->makeRedirect('edit', $model);
     }
@@ -137,7 +136,7 @@ class Languages extends \Admin\Classes\AdminController
             : lang('system::lang.languages.text_no_update_available');
 
         return $this->makePartial('updates', [
-            'language' => (object) $response,
+            'language' => (object)$response,
             'title' => $title,
             'message' => sprintf($message, $model->name),
         ]);
@@ -146,9 +145,8 @@ class Languages extends \Admin\Classes\AdminController
     public function onApplyItems()
     {
         $items = post('items') ?? [];
-        if (! count($items)) {
+        if (!count($items))
             throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
-        }
 
         $this->validateItems();
 
@@ -187,21 +185,15 @@ class Languages extends \Admin\Classes\AdminController
         switch ($processMeta) {
             case 'downloadLanguage':
                 $result = $languageManager->downloadPack($meta);
-                if ($result) {
-                    $json['result'] = 'success';
-                }
+                if ($result) $json['result'] = 'success';
                 break;
             case 'extractLanguage':
                 $response = $languageManager->extractPack($meta);
-                if ($response) {
-                    $json['result'] = 'success';
-                }
+                if ($response) $json['result'] = 'success';
                 break;
             case 'complete':
                 $response = $languageManager->installPack($meta['items'][0] ?? []);
-                if ($response) {
-                    $json['result'] = 'success';
-                }
+                if ($response) $json['result'] = 'success';
                 break;
         }
 
@@ -210,9 +202,8 @@ class Languages extends \Admin\Classes\AdminController
 
     public function formExtendFields(Form $form, $fields)
     {
-        if ($form->getContext() !== 'edit') {
+        if ($form->getContext() !== 'edit')
             return;
-        }
 
         $fileField = $form->getField('_file');
         $searchField = $form->getField('_search');
@@ -224,9 +215,8 @@ class Languages extends \Admin\Classes\AdminController
         $stringFilterField->value = $this->getFilterValue('string_filter', 'all');
         $field->value = $this->getFilterValue('search');
 
-        if (is_null($this->localeFiles)) {
+        if (is_null($this->localeFiles))
             $this->localeFiles = LanguageManager::instance()->listLocaleFiles('en');
-        }
 
         $fileField->options = $this->prepareNamespaces();
         $field->options = post($field->getName()) ?: $this->prepareTranslations($form->model);
@@ -261,10 +251,11 @@ class Languages extends \Admin\Classes\AdminController
         foreach ($this->localeFiles as $file) {
             $name = sprintf('%s::%s', $file['namespace'], $file['group']);
 
-            if (! array_get($file, 'system', false)
+            if (!array_get($file, 'system', false)
                 && ($extension = $extensionManager->findExtension($file['namespace']))) {
                 $result[$name] = array_get($extension->extensionMeta(), 'name').' - '.$name;
-            } else {
+            }
+            else {
                 $result[$name] = ucfirst($file['namespace']).' - '.$name;
             }
         }

@@ -41,7 +41,6 @@ class ServiceProvider extends AppServiceProvider
 {
     /**
      * Register the service provider.
-     *
      * @return void
      */
     public function register()
@@ -78,7 +77,6 @@ class ServiceProvider extends AppServiceProvider
 
     /**
      * Bootstrap the module events.
-     *
      * @return void
      */
     public function boot()
@@ -213,13 +211,13 @@ class ServiceProvider extends AppServiceProvider
         });
 
         Validator::extend('valid_date', function ($attribute, $value, $parameters, $validator) {
-            return ! (! preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
-                && ! preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value));
+            return !(!preg_match('/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-[0-9]{4}$/', $value)
+                && !preg_match('/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/', $value));
         });
 
         Validator::extend('valid_time', function ($attribute, $value, $parameters, $validator) {
-            return ! (! preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
-                && ! preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
+            return !(!preg_match('/^([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/', $value)
+                && !preg_match('/^(1[012]|[1-9]):[0-5][0-9](\s)?(?i)(am|pm)$/', $value));
         });
     }
 
@@ -254,7 +252,7 @@ class ServiceProvider extends AppServiceProvider
             $plainOnly = is_null($view);
             $method = is_null($raw) ? 'addContentToMailer' : 'addRawContentToMailer';
 
-            return ! MailManager::instance()->$method($message, $raw ?: $view ?: $plain, $data, $plainOnly);
+            return !MailManager::instance()->$method($message, $raw ?: $view ?: $plain, $data, $plainOnly);
         });
     }
 
@@ -271,7 +269,7 @@ class ServiceProvider extends AppServiceProvider
 
         Paginator::currentPageResolver(function ($pageName = 'page') {
             $page = Request::get($pageName);
-            if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int) $page >= 1) {
+            if (filter_var($page, FILTER_VALIDATE_INT) !== false && (int)$page >= 1) {
                 return $page;
             }
 
@@ -300,7 +298,7 @@ class ServiceProvider extends AppServiceProvider
         $this->app->resolving('translator.localization', function ($localization, $app) {
             $app['config']->set('localization.locale', setting('default_language', $app['config']['app.locale']));
             $app['config']->set('localization.supportedLocales', setting('supported_languages', []) ?: ['en']);
-            $app['config']->set('localization.detectBrowserLocale', (bool) setting('detect_language', false));
+            $app['config']->set('localization.detectBrowserLocale', (bool)setting('detect_language', false));
         });
 
         $this->app->resolving('geocoder', function ($geocoder, $app) {
@@ -315,7 +313,7 @@ class ServiceProvider extends AppServiceProvider
         });
 
         Event::listen(CommandStarting::class, function () {
-            config()->set('system.activityRecordsTTL', (int) setting('activity_log_timeout', 60));
+            config()->set('system.activityRecordsTTL', (int)setting('activity_log_timeout', 60));
         });
     }
 
@@ -365,13 +363,11 @@ class ServiceProvider extends AppServiceProvider
                 ->listTableForeignKeys($this->table)
             );
 
-            if (! starts_with($key, $this->prefix)) {
+            if (!starts_with($key, $this->prefix))
                 $key = sprintf('%s%s_%s_foreign', $this->prefix, $this->table, $key);
-            }
 
-            if (! in_array($key, $foreignKeys)) {
+            if (!in_array($key, $foreignKeys))
                 return;
-            }
 
             return $this->dropForeign($key);
         });
@@ -384,13 +380,11 @@ class ServiceProvider extends AppServiceProvider
                 ->listTableIndexes($this->table)
             );
 
-            if (! starts_with($key, $this->prefix)) {
+            if (!starts_with($key, $this->prefix))
                 $key = sprintf('%s%s_%s_foreign', $this->prefix, $this->table, $key);
-            }
 
-            if (! in_array($key, $indexes)) {
+            if (!in_array($key, $indexes))
                 return;
-            }
 
             return $this->dropIndex($key);
         });

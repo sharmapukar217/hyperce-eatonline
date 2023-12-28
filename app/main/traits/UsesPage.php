@@ -15,9 +15,8 @@ trait UsesPage
 
     public function findStaticPage($id)
     {
-        if (isset(self::$staticPagesCache[$id])) {
+        if (isset(self::$staticPagesCache[$id]))
             return self::$staticPagesCache[$id];
-        }
 
         return self::$staticPagesCache[$id] = Pages_model::find($id);
     }
@@ -31,18 +30,16 @@ trait UsesPage
 
     public static function getThemePageOptions()
     {
-        if (self::$themePageOptionsCache) {
+        if (self::$themePageOptionsCache)
             return self::$themePageOptionsCache;
-        }
 
         return self::$themePageOptionsCache = Page::getDropdownOptions();
     }
 
     public static function getStaticPageOptions()
     {
-        if (self::$staticPageOptionsCache) {
+        if (self::$staticPageOptionsCache)
             return self::$staticPageOptionsCache;
-        }
 
         return self::$staticPageOptionsCache = Pages_model::getDropdownOptions();
     }

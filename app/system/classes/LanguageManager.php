@@ -56,29 +56,26 @@ class LanguageManager
 
     /**
      * Create a Directory Map of all themes
-     *
      * @return array A list of all themes in the system.
      */
     public function paths()
     {
-        if ($this->paths) {
+        if ($this->paths)
             return $this->paths;
-        }
 
         $paths = [];
 
-        if (! File::exists($directory = base_path('language'))) {
+        if (!File::exists($directory = base_path('language')))
             return $paths;
-        }
 
-        //        $directories = array_merge([App::themesPath()], self::$directories);
-        //        foreach ($directories as $directory) {
+//        $directories = array_merge([App::themesPath()], self::$directories);
+//        foreach ($directories as $directory) {
         foreach (File::directories($directory) as $path) {
             $langDir = basename($path);
             $paths[$langDir] = $path;
         }
 
-        //        }
+//        }
 
         return $this->paths = $paths;
     }
@@ -114,21 +111,13 @@ class LanguageManager
         foreach ($sourceLines as $key => $sourceLine) {
             $translationLine = array_get($translationLines, $key, $sourceLine);
 
-            if ($stringFilter === 'changed' && ! array_has($translationLines, $key)) {
-                continue;
-            }
+            if ($stringFilter === 'changed' && !array_has($translationLines, $key)) continue;
 
-            if ($stringFilter === 'unchanged' && array_has($translationLines, $key)) {
-                continue;
-            }
+            if ($stringFilter === 'unchanged' && array_has($translationLines, $key)) continue;
 
-            if (! is_null($sourceLine) && ! is_string($sourceLine)) {
-                continue;
-            }
+            if (!is_null($sourceLine) && !is_string($sourceLine)) continue;
 
-            if (! is_null($translationLine) && ! is_string($translationLine)) {
-                continue;
-            }
+            if (!is_null($translationLine) && !is_string($translationLine)) continue;
 
             $namespacedKey = sprintf('%s::%s.%s', $file['namespace'], $file['group'], $key);
 
@@ -143,9 +132,8 @@ class LanguageManager
 
     public function searchTranslations($translations, $term = null)
     {
-        if (! strlen($term)) {
+        if (!strlen($term))
             return $translations;
-        }
 
         $result = [];
         $term = strtolower($term);
@@ -157,7 +145,8 @@ class LanguageManager
                 ) {
                     $result[$key] = $value;
                 }
-            } else {
+            }
+            else {
                 $result[$key] = $value;
             }
         }
@@ -186,7 +175,7 @@ class LanguageManager
 
     public function canUpdate(Languages_model $language)
     {
-        return ! in_array($language->code, ['en', 'en_US', 'en_GB']) && $language->can_update;
+        return !in_array($language->code, ['en', 'en_US', 'en_GB']) && $language->can_update;
     }
 
     //
@@ -199,10 +188,8 @@ class LanguageManager
             'search' => $term,
         ]);
 
-        if (isset($items['data'])) {
-            foreach ($items['data'] as &$item) {
-                $item['require'] = [];
-            }
+        if (isset($items['data'])) foreach ($items['data'] as &$item) {
+            $item['require'] = [];
         }
 
         return $items;
@@ -221,9 +208,8 @@ class LanguageManager
         $packHash = array_get($meta, 'hash');
 
         $filePath = $this->getFilePath($packCode);
-        if (! is_dir($fileDir = dirname($filePath))) {
+        if (!is_dir($fileDir = dirname($filePath)))
             mkdir($fileDir, 0777, true);
-        }
 
         return $this->getHubManager()->downloadLanguagePack($filePath, $packHash, [
             'locale' => $packCode,
@@ -237,9 +223,8 @@ class LanguageManager
 
         $filePath = $this->getFilePath($packCode);
         $extractTo = app()->langPath().'/'.$packCode;
-        if (! file_exists($extractTo)) {
+        if (!file_exists($extractTo))
             mkdir($extractTo, 0755, true);
-        }
 
         $zip = new ZipArchive();
         if ($zip->open($filePath) === true) {

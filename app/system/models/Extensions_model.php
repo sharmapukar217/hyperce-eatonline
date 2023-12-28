@@ -44,16 +44,14 @@ class Extensions_model extends Model
     public static function onboardingIsComplete()
     {
         $activeTheme = ThemeManager::instance()->getActiveTheme();
-        if (! $activeTheme) {
+        if (!$activeTheme)
             return false;
-        }
 
-        $requiredExtensions = (array) $activeTheme->requires;
+        $requiredExtensions = (array)$activeTheme->requires;
         foreach ($requiredExtensions as $name => $constraint) {
             $extension = ExtensionManager::instance()->findExtension($name);
-            if (! $extension || $extension->disabled) {
+            if (!$extension || $extension->disabled)
                 return false;
-            }
         }
 
         return true;
@@ -85,23 +83,21 @@ class Extensions_model extends Model
 
     public function getStatusAttribute()
     {
-        return $this->class && ! $this->class->disabled;
+        return $this->class && !$this->class->disabled;
     }
 
     public function getIconAttribute()
     {
         $icon = array_get($this->meta, 'icon', []);
-        if (is_string($icon)) {
+        if (is_string($icon))
             $icon = ['class' => 'fa '.$icon];
-        }
 
         if (strlen($image = array_get($icon, 'image'))) {
             $file = extension_path(str_replace('.', '/', $this->name).'/'.$image);
             if (file_exists($file)) {
                 $extension = pathinfo($file, PATHINFO_EXTENSION);
-                if (! array_key_exists($extension, self::ICON_MIMETYPES)) {
+                if (!array_key_exists($extension, self::ICON_MIMETYPES))
                     throw new ApplicationException('Invalid extension icon file type in: '.$this->name.'. Only SVG images are supported');
-                }
 
                 $mimeType = self::ICON_MIMETYPES[$extension];
                 $data = base64_encode(file_get_contents($file));
@@ -121,9 +117,8 @@ class Extensions_model extends Model
     public function getReadmeAttribute($value)
     {
         $readmePath = ExtensionManager::instance()->path($this->name).'readme.md';
-        if (! $readmePath = File::existsInsensitive($readmePath)) {
+        if (!$readmePath = File::existsInsensitive($readmePath))
             return $value;
-        }
 
         return Markdown::parseFile($readmePath)->toHtml();
     }
@@ -143,18 +138,16 @@ class Extensions_model extends Model
 
     /**
      * Sets the extension class as a property of this class
-     *
      * @return bool
      */
     public function applyExtensionClass()
     {
         $code = $this->name;
 
-        if (! $code) {
+        if (!$code)
             return false;
-        }
 
-        if (! $extensionClass = ExtensionManager::instance()->findExtension($code)) {
+        if (!$extensionClass = ExtensionManager::instance()->findExtension($code)) {
             return false;
         }
 
@@ -172,13 +165,11 @@ class Extensions_model extends Model
         foreach ($extensionManager->namespaces() as $namespace => $path) {
             $code = $extensionManager->getIdentifier($namespace);
 
-            if (! ($extension = $extensionManager->findExtension($code))) {
-                continue;
-            }
+            if (!($extension = $extensionManager->findExtension($code))) continue;
 
             $model = self::firstOrNew(['name' => $code]);
 
-            $enableExtension = ($model->exists && ! $extension->disabled);
+            $enableExtension = ($model->exists && !$extension->disabled);
 
             $model->version = ComposerManager::instance()->getPackageVersion($model->name) ?? $model->version;
             $model->save();

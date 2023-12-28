@@ -42,7 +42,7 @@ class MediaLibrary
         $this->storageFolder = $this->validatePath(Config::get('system.assets.media.folder', 'data'));
         $this->storagePath = rtrim(Config::get('system.assets.media.path', '/assets/images/data'), '/');
 
-        if (! starts_with($this->storagePath, ['//', 'http://', 'https://'])) {
+        if (!starts_with($this->storagePath, ['//', 'http://', 'https://'])) {
             $this->storagePath = asset($this->storagePath);
         }
 
@@ -57,7 +57,7 @@ class MediaLibrary
         $cached = Cache::get(self::$cacheKey, false);
         $cached = $cached ? @unserialize(@base64_decode($cached)) : [];
 
-        if (! is_array($cached)) {
+        if (!is_array($cached)) {
             $cached = [];
         }
 
@@ -87,9 +87,8 @@ class MediaLibrary
 
     public function listFolders($path = null, array $exclude = [], $recursive = false)
     {
-        if (is_null($path)) {
+        if (is_null($path))
             $path = '/';
-        }
 
         $path = $this->validatePath($path);
 
@@ -101,29 +100,25 @@ class MediaLibrary
         $folders = array_unique($folders, SORT_LOCALE_STRING);
         foreach ($folders as $folder) {
             $folder = $this->getMediaRelativePath($folder);
-            if (! strlen($folder)) {
+            if (!strlen($folder))
                 $folder = '/';
-            }
 
-            if (starts_with($folder, $exclude)) {
+            if (starts_with($folder, $exclude))
                 continue;
-            }
 
             $result[] = $folder;
         }
 
-        if ($path == '/' && ! in_array('/', $result)) {
+        if ($path == '/' && !in_array('/', $result))
             array_unshift($result, '/');
-        }
 
         return $result;
     }
 
     public function fetchFiles($path, $sortBy = [], $options = null)
     {
-        if (is_string($options)) {
+        if (is_string($options))
             $options = ['search' => $options, 'filter' => 'all'];
-        }
 
         $path = $this->validatePath($path);
 
@@ -240,9 +235,8 @@ class MediaLibrary
 
     public function getMediaUrl($path)
     {
-        if (starts_with($path, ['http://', 'https://', '//'])) {
+        if (starts_with($path, ['http://', 'https://', '//']))
             return $path;
-        }
 
         $path = $this->validatePath($path);
 
@@ -251,9 +245,8 @@ class MediaLibrary
 
     public function getMediaPath($path)
     {
-        if (starts_with($path, base_path())) {
+        if (starts_with($path, base_path()))
             return $path;
-        }
 
         return $this->validatePath($this->storageFolder.$path, true);
     }
@@ -273,31 +266,27 @@ class MediaLibrary
         $path = $this->validatePath($path);
 
         $filePath = $this->getMediaPath($path);
-        if (! starts_with($path, base_path())) {
+        if (!starts_with($path, base_path()))
             $filePath = $this->getStorageDisk()->path($filePath);
-        }
 
         $thumbFile = $this->getMediaThumbFile($filePath, $options);
         $thumbPath = temp_path($this->validatePath($thumbFile, true));
         $thumbPublicPath = File::localToPublic($thumbPath);
 
-        if (File::exists($thumbPath)) {
+        if (File::exists($thumbPath))
             return asset($thumbPublicPath);
-        }
 
         $this->ensureDirectoryExists($thumbPath);
 
-        if (! File::exists($filePath)) {
+        if (!File::exists($filePath))
             $filePath = $this->getDefaultThumbPath($thumbPath, array_get($options, 'default'));
-        }
 
         $manipulator = Manipulator::make($filePath)->useSource(
             $this->getStorageDisk()->getDriver()
         );
 
-        if ($manipulator->isSupported()) {
+        if ($manipulator->isSupported())
             $manipulator->manipulate(array_except($options, ['extension', 'default']));
-        }
 
         $manipulator->save($thumbPath);
 
@@ -306,9 +295,8 @@ class MediaLibrary
 
     public function getDefaultThumbPath($thumbPath, $default = null)
     {
-        if ($default) {
+        if ($default)
             return $this->getStorageDisk()->path($this->getMediaPath($default));
-        }
 
         File::put($thumbPath, Manipulator::decodedBlankImage());
 
@@ -319,18 +307,16 @@ class MediaLibrary
     {
         $path = $this->validatePath($path);
 
-        if (substr($path, 0, $this->storageFolderNameLength) == $this->storageFolder) {
+        if (substr($path, 0, $this->storageFolderNameLength) == $this->storageFolder)
             return substr($path, $this->storageFolderNameLength);
-        }
 
         throw new SystemException(sprintf('Cannot convert Media Library path "%s" to a path relative to the Library root.', $path));
     }
 
     public function getConfig($key = null, $default = null)
     {
-        if (is_null($key)) {
+        if (is_null($key))
             return $this->config;
-        }
 
         return array_get($this->config, $key, $default);
     }
@@ -342,13 +328,11 @@ class MediaLibrary
 
     public function isAllowedExtension($filename)
     {
-        if (! $nameExt = pathinfo($filename, PATHINFO_EXTENSION)) {
+        if (!$nameExt = pathinfo($filename, PATHINFO_EXTENSION))
             return $filename;
-        }
 
-        if (! in_array($nameExt, $this->getAllowedExtensions())) {
+        if (!in_array($nameExt, $this->getAllowedExtensions()))
             return false;
-        }
 
         return $nameExt;
     }
@@ -380,9 +364,8 @@ class MediaLibrary
             case 'files':
                 $files = $this->getStorageDisk()->files($fullPath, $recursive);
                 foreach ($files as $file) {
-                    if ($libraryItem = $this->initMediaItem($file, MediaItem::TYPE_FILE)) {
+                    if ($libraryItem = $this->initMediaItem($file, MediaItem::TYPE_FILE))
                         $result[] = $libraryItem;
-                    }
                 }
                 break;
             case 'directories':
@@ -397,14 +380,12 @@ class MediaLibrary
     {
         $baseName = basename($path);
 
-        if (in_array($baseName, $this->ignoreNames)) {
+        if (in_array($baseName, $this->ignoreNames))
             return false;
-        }
 
         foreach ($this->ignorePatterns as $pattern) {
-            if (preg_match('/'.$pattern.'/', $baseName)) {
+            if (preg_match('/'.$pattern.'/', $baseName))
                 return false;
-            }
         }
 
         return true;
@@ -418,30 +399,27 @@ class MediaLibrary
                 case 'name':
                     return strcasecmp($a->path, $b->path);
                 case 'date':
-                    if ($a->lastModified > $b->lastModified) {
+                    if ($a->lastModified > $b->lastModified)
                         return -1;
-                    }
 
                     return $a->lastModified < $b->lastModified ? 1 : 0;
                     break;
                 case 'size':
-                    if ($a->size > $b->size) {
+                    if ($a->size > $b->size)
                         return -1;
-                    }
 
                     return $a->size < $b->size ? 1 : 0;
                     break;
             }
         });
 
-        if ($direction == 'descending') {
+        if ($direction == 'descending')
             $files = array_reverse($files);
-        }
     }
 
     protected function filterFiles(&$files, $filterBy)
     {
-        if (! $filterBy || $filterBy === 'all') {
+        if (!$filterBy || $filterBy === 'all') {
             return;
         }
 
@@ -457,15 +435,13 @@ class MediaLibrary
 
     protected function searchFiles(&$files, $filter)
     {
-        if (! $filter) {
+        if (!$filter)
             return;
-        }
 
         $result = [];
         foreach ($files as $item) {
-            if (str_contains($item->name, $filter)) {
+            if (str_contains($item->name, $filter))
                 $result[] = $item;
-            }
         }
 
         $files = $result;
@@ -478,9 +454,8 @@ class MediaLibrary
 
     protected function getStorageDisk()
     {
-        if ($this->storageDisk) {
+        if ($this->storageDisk)
             return $this->storageDisk;
-        }
 
         return $this->storageDisk = Storage::disk(
             Config::get('system.assets.media.disk', 'local')
@@ -491,9 +466,8 @@ class MediaLibrary
     {
         $relativePath = $this->getMediaRelativePath($path);
 
-        if (! $this->isVisible($relativePath)) {
+        if (!$this->isVisible($relativePath))
             return;
-        }
 
         $lastModified = $itemType == MediaItem::TYPE_FILE
             ? $this->getStorageDisk()->lastModified($path)
@@ -514,13 +488,11 @@ class MediaLibrary
 
         foreach ($words as $word) {
             $word = trim($word);
-            if (! strlen($word)) {
+            if (!strlen($word))
                 continue;
-            }
 
-            if (! Str::contains($path, $word)) {
+            if (!Str::contains($path, $word))
                 return false;
-            }
         }
 
         return true;
@@ -543,9 +515,8 @@ class MediaLibrary
 
     protected function ensureDirectoryExists($path)
     {
-        if (File::exists($directory = dirname($path))) {
+        if (File::exists($directory = dirname($path)))
             return;
-        }
 
         File::makeDirectory($directory, 0777, true);
     }

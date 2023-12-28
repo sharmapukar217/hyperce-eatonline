@@ -33,22 +33,17 @@ class RenameModelClassNamesToMorphMapCustomNames extends Migration
     protected function updateMorphClassName($definitions)
     {
         collect($definitions)->each(function ($columns, $tableName) {
-            if (! Schema::hasTable($tableName)) {
+            if (!Schema::hasTable($tableName))
                 return;
-            }
 
             DB::table($tableName)->get()->each(function ($model) use ($tableName, $columns) {
                 $columnsToUpdate = [];
                 foreach ($columns as $column) {
                     $columnValue = $model->{$column};
 
-                    if (! $columnValue) {
-                        continue;
-                    }
+                    if (!$columnValue) continue;
 
-                    if (! array_key_exists($columnValue, $this->morphMap)) {
-                        continue;
-                    }
+                    if (!array_key_exists($columnValue, $this->morphMap)) continue;
 
                     $columnsToUpdate[$column] = array_get($this->morphMap, $columnValue);
                 }

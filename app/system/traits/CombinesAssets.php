@@ -51,13 +51,12 @@ trait CombinesAssets
     {
         $this->cacheKeyPrefix = 'ti.combiner.';
         $this->useCache = config('system.enableAssetCache', true);
-        $this->combineAssets = config('system.enableAssetCombiner', ! config('app.debug', false));
+        $this->combineAssets = config('system.enableAssetCombiner', !config('app.debug', false));
         $this->storagePath = storage_path('system/combiner/data');
         $this->assetsCombinerUri = config('system.assetsCombinerUri', '/_assets');
 
-        if (app()->runningInAdmin()) {
+        if (app()->runningInAdmin())
             $this->assetsCombinerUri = config('system.adminUri', '/admin').$this->assetsCombinerUri;
-        }
 
         $this->registerFilter('css', new \Igniter\Flame\Assetic\Filter\CssImportFilter);
         $this->registerFilter(['css', 'scss'], new \Igniter\Flame\Assetic\Filter\CssRewriteFilter);
@@ -79,8 +78,9 @@ trait CombinesAssets
      *
      *     Assets::combine('css', $assets);
      *
-     * @param  string  $type
-     * @param  array  $assets Collection of assets
+     * @param string $type
+     * @param array $assets Collection of assets
+     *
      * @return string URL to contents.
      */
     public function combine($type, array $assets = [])
@@ -93,7 +93,7 @@ trait CombinesAssets
         $cacheKey = $this->getCacheKey($assets);
         $cacheData = $this->useCache ? $this->getCache($cacheKey.$lastMod) : false;
 
-        if (! $cacheData) {
+        if (!$cacheData) {
             $cacheData = [
                 'type' => $type,
                 'uri' => $cacheKey.'-'.$lastMod.'.'.$type,
@@ -121,8 +121,9 @@ trait CombinesAssets
      *         base_path('themes/demo/assets/css/theme.css'),
      *     );
      *
-     * @param  array  $assets Collection of assets
-     * @param  string  $destination Write the combined file to this location
+     * @param array $assets Collection of assets
+     * @param string $destination Write the combined file to this location
+     *
      * @return void
      */
     public function combineToFile(array $assets, $destination)
@@ -141,7 +142,7 @@ trait CombinesAssets
     public function combineGetContents($cacheKey)
     {
         $cacheData = $this->getCache($cacheKey);
-        if (! $cacheData) {
+        if (!$cacheData) {
             throw new ApplicationException(sprintf(lang('system::lang.not_found.combiner'), $cacheKey));
         }
 
@@ -156,7 +157,7 @@ trait CombinesAssets
         $response->setLastModified(new Carbon($lastModTime));
         $response->setEtag($eTag);
         $response->setPublic();
-        $modified = ! $response->isNotModified(App::make('request'));
+        $modified = !$response->isNotModified(App::make('request'));
 
         // Request says response is cached, no code evaluation needed
         if ($modified) {
@@ -186,17 +187,14 @@ trait CombinesAssets
         foreach ($assets as $path) {
             $filters = $this->getFilters(File::extension($path)) ?: [];
 
-            if (file_exists($publicPath = public_path($path))) {
+            if (file_exists($publicPath = public_path($path)))
                 $path = $publicPath;
-            }
 
-            if (! file_exists($path)) {
+            if (!file_exists($path))
                 $path = File::symbolizePath($path, null) ?? $path;
-            }
 
-            if (! file_exists($path)) {
+            if (!file_exists($path))
                 continue;
-            }
 
             $source = str_starts_with($path, public_path())
                 ? public_path()
@@ -222,7 +220,8 @@ trait CombinesAssets
      *
      * /index.php/_assets    returns index-php/_assets/
      *
-     * @param  string|null  $path
+     * @param string|null $path
+     *
      * @return string The new target path
      */
     protected function getCombinerPath($path = null)
@@ -232,9 +231,8 @@ trait CombinesAssets
             $path = $baseUri.$this->assetsCombinerUri;
         }
 
-        if (strpos($path, '/') === 0) {
+        if (strpos($path, '/') === 0)
             $path = substr($path, 1);
-        }
 
         return str_replace('.', '-', $path).'/';
     }
@@ -245,7 +243,7 @@ trait CombinesAssets
             return $files;
         }
 
-        if (! File::isDirectory($this->storagePath)) {
+        if (!File::isDirectory($this->storagePath)) {
             @File::makeDirectory($this->storagePath);
         }
 
@@ -266,8 +264,9 @@ trait CombinesAssets
     /**
      * Register a filter to apply to the combining process.
      *
-     * @param  string|array  $extension Extension name. Eg: css
-     * @param  object  $filter Collection of files to combine.
+     * @param string|array $extension Extension name. Eg: css
+     * @param object $filter Collection of files to combine.
+     *
      * @return self
      */
     public function registerFilter($extension, $filter)
@@ -282,11 +281,11 @@ trait CombinesAssets
 
         $extension = strtolower($extension);
 
-        if (! isset($this->filters[$extension])) {
+        if (!isset($this->filters[$extension])) {
             $this->filters[$extension] = [];
         }
 
-        if (! is_null($filter)) {
+        if (!is_null($filter)) {
             $this->filters[$extension][] = $filter;
         }
 
@@ -296,15 +295,17 @@ trait CombinesAssets
     /**
      * Registers bundle.
      *
-     * @param  null  $destination
-     * @param  string  $appContext
+     * @param $extension
+     * @param $files
+     * @param null $destination
+     * @param string $appContext
+     *
      * @return void
      */
     public function registerBundle($extension, $files, $destination = null, $appContext = 'main')
     {
-        if (! is_array($files)) {
+        if (!is_array($files))
             $files = [$files];
-        }
 
         $firstFile = array_values($files)[0];
 
@@ -316,12 +317,12 @@ trait CombinesAssets
 
             if ($extension != 'js') {
                 $cssPath = $path.'/../css';
-                if (File::isDirectory(File::symbolizePath($cssPath))) {
+                if (File::isDirectory(File::symbolizePath($cssPath)))
                     $path = $cssPath;
-                }
 
                 $destination = $path.'/'.$file.'.css';
-            } else {
+            }
+            else {
                 $destination = $path.'/'.$file.'.min.'.$extension;
             }
         }
@@ -332,19 +333,18 @@ trait CombinesAssets
     /**
      * Returns bundles.
      *
-     * @param  string  $extension
-     * @param  string  $appContext
+     * @param string $extension
+     *
+     * @param string $appContext
      * @return array
      */
     public function getBundles($extension = null, $appContext = 'main')
     {
-        if (is_null($extension)) {
+        if (is_null($extension))
             return $this->bundles[$appContext] ?? [];
-        }
 
-        if (isset($this->bundles[$appContext][$extension])) {
+        if (isset($this->bundles[$appContext][$extension]))
             return $this->bundles[$appContext][$extension];
-        }
 
         return null;
     }
@@ -352,18 +352,17 @@ trait CombinesAssets
     /**
      * Returns filters.
      *
-     * @param  string  $extension
+     * @param string $extension
+     *
      * @return array
      */
     public function getFilters($extension = null)
     {
-        if (is_null($extension)) {
+        if (is_null($extension))
             return $this->filters;
-        }
 
-        if (isset($this->filters[$extension])) {
+        if (isset($this->filters[$extension]))
             return $this->filters[$extension];
-        }
 
         return null;
     }
@@ -371,14 +370,16 @@ trait CombinesAssets
     /**
      * Clears any registered filters.
      *
-     * @param  string  $extension
+     * @param string $extension
+     *
      * @return self
      */
     public function resetFilters($extension = null)
     {
         if ($extension === null) {
             $this->filters = [];
-        } else {
+        }
+        else {
             $this->filters[$extension] = [];
         }
 
@@ -398,7 +399,7 @@ trait CombinesAssets
 
     protected function getCache($cacheKey)
     {
-        if (! Cache::has($this->cacheKeyPrefix.$cacheKey)) {
+        if (!Cache::has($this->cacheKeyPrefix.$cacheKey)) {
             return false;
         }
 
@@ -407,9 +408,8 @@ trait CombinesAssets
 
     protected function putCache($cacheKey, $cacheData)
     {
-        if (Cache::has($this->cacheKeyPrefix.$cacheKey)) {
+        if (Cache::has($this->cacheKeyPrefix.$cacheKey))
             return false;
-        }
 
         Cache::forever($this->cacheKeyPrefix.$cacheKey, base64_encode(serialize($cacheData)));
 

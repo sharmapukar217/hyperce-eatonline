@@ -71,10 +71,10 @@ class Customer extends \Igniter\Flame\Auth\Manager
     /**
      * Registers a user by giving the required credentials
      *
-     * @param  array  $credentials
-     * @param  bool  $activate
-     * @return \Admin\Models\Customers_model
+     * @param array $credentials
      *
+     * @param bool $activate
+     * @return \Admin\Models\Customers_model
      * @throws \Exception
      */
     public function register(array $attributes, $activate = false)

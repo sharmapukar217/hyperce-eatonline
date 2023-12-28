@@ -75,15 +75,13 @@ class Themes_model extends Model
 
     public static function onboardingIsComplete()
     {
-        if (! $code = params('default_themes.main')) {
+        if (!$code = params('default_themes.main'))
             return false;
-        }
 
-        if (! $model = self::where('code', $code)->first()) {
+        if (!$model = self::where('code', $code)->first())
             return false;
-        }
 
-        return ! is_null($model->data);
+        return !is_null($model->data);
     }
 
     public function getLayoutOptions()
@@ -99,12 +97,11 @@ class Themes_model extends Model
             try {
                 $componentObj = $manager->makeComponent($code, null, $definition);
 
-                if ($componentObj->isHidden) {
-                    continue;
-                }
+                if ($componentObj->isHidden) continue;
 
                 $components[$code] = [$definition['name'], lang($definition['description'])];
-            } catch (Exception $ex) {
+            }
+            catch (Exception $ex) {
             }
         }
 
@@ -147,9 +144,10 @@ class Themes_model extends Model
 
     public function setAttribute($key, $value)
     {
-        if (! $this->isFillable($key)) {
+        if (!$this->isFillable($key)) {
             $this->fieldValues[$key] = $value;
-        } else {
+        }
+        else {
             parent::setAttribute($key, $value);
         }
     }
@@ -185,19 +183,17 @@ class Themes_model extends Model
 
     /**
      * Attach the theme object to this class
-     *
      * @return bool
      */
     public function applyThemeManager()
     {
         $code = $this->code;
 
-        if (! $code) {
+        if (!$code)
             return false;
-        }
 
         $themeManager = ThemeManager::instance();
-        if (! $themeClass = $themeManager->findTheme($code)) {
+        if (!$themeClass = $themeManager->findTheme($code)) {
             return false;
         }
 
@@ -219,17 +215,15 @@ class Themes_model extends Model
 
     public function getFieldsConfig()
     {
-        if (! is_null($this->fieldConfig)) {
+        if (!is_null($this->fieldConfig))
             return $this->fieldConfig;
-        }
 
         $fields = [];
         $formConfig = $this->getTheme()->getFormConfig();
         foreach ($formConfig as $section => $item) {
             foreach (array_get($item, 'fields', []) as $name => $field) {
-                if (! isset($field['tab'])) {
+                if (!isset($field['tab']))
                     $field['tab'] = $item['title'];
-                }
 
                 $fields[$name] = $field;
             }
@@ -265,16 +259,12 @@ class Themes_model extends Model
         $installedThemes = [];
         $themeManager = ThemeManager::instance();
         foreach ($themeManager->paths() as $code => $path) {
-            if (! ($themeObj = $themeManager->findTheme($code))) {
-                continue;
-            }
+            if (!($themeObj = $themeManager->findTheme($code))) continue;
 
             $installedThemes[] = $name = $themeObj->name ?? $code;
 
             // Only add themes whose meta code match their directory name
-            if ($code != $name) {
-                continue;
-            }
+            if ($code != $name) continue;
 
             $theme = self::firstOrNew(['code' => $name]);
             $theme->name = $themeObj->label ?? title_case($code);
@@ -299,12 +289,11 @@ class Themes_model extends Model
     {
         $installedThemes = self::select('status', 'code')->lists('status', 'code')->all();
 
-        if (! is_array($installedThemes)) {
+        if (!is_array($installedThemes))
             $installedThemes = [];
-        }
 
         $installedThemes = array_map(function ($status) {
-            return (bool) $status;
+            return (bool)$status;
         }, $installedThemes);
 
         setting()->set('installed_themes', $installedThemes);
@@ -314,29 +303,29 @@ class Themes_model extends Model
     /**
      * Activate theme
      *
-     * @param  string  $code
+     * @param string $code
+     *
      * @return bool|mixed
      */
     public static function activateTheme($code)
     {
-        if (empty($code) || ! $theme = self::whereCode($code)->first()) {
+        if (empty($code) || !$theme = self::whereCode($code)->first())
             return false;
-        }
 
         $extensionManager = ExtensionManager::instance();
 
         $notFound = [];
         foreach ($theme->getTheme()->requires as $require => $version) {
-            if (! $extensionManager->hasExtension($require)) {
+            if (!$extensionManager->hasExtension($require)) {
                 $notFound[] = $require;
-            } else {
+            }
+            else {
                 $extensionManager->installExtension($require);
             }
         }
 
-        if (count($notFound)) {
+        if (count($notFound))
             throw new ApplicationException(sprintf('The following required extensions must be installed before activating this theme, %s', implode(', ', $notFound)));
-        }
 
         params()->set('default_themes.main', $theme->code);
         params()->save();
@@ -349,15 +338,16 @@ class Themes_model extends Model
     /**
      * Delete a single theme by code
      *
-     * @param  string  $theme_code
-     * @param  bool  $delete_data
+     * @param string $theme_code
+     * @param bool $delete_data
+     *
      * @return bool
      */
     public static function deleteTheme($themeCode, $deleteData = true)
     {
         $themeModel = self::where('code', $themeCode)->first();
 
-        if ($themeModel && ($deleteData || ! $themeModel->data)) {
+        if ($themeModel && ($deleteData || !$themeModel->data)) {
             $themeModel->delete();
         }
 
@@ -379,7 +369,7 @@ class Themes_model extends Model
     /**
      * Checks whether a code exists in the database or not
      *
-     * @param  string  $uniqueCode
+     * @param string $uniqueCode
      * @return bool
      */
     protected static function themeCodeExists($uniqueCode)

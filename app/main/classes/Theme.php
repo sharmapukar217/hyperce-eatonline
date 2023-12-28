@@ -145,14 +145,13 @@ class Theme
 
     public function hasParent()
     {
-        return ! is_null($this->parentName);
+        return !is_null($this->parentName);
     }
 
     public function requires($require)
     {
-        if (! is_array($require)) {
+        if (!is_array($require))
             $require = [$require];
-        }
 
         $this->requires = $require;
 
@@ -180,13 +179,11 @@ class Theme
 
     public function loadThemeFile()
     {
-        if (File::exists($path = $this->getPath().'/theme.php')) {
+        if (File::exists($path = $this->getPath().'/theme.php'))
             require $path;
-        }
 
-        if (File::exists($path = $this->getParentPath().'/theme.php')) {
+        if (File::exists($path = $this->getParentPath().'/theme.php'))
             require $path;
-        }
     }
 
     //
@@ -195,9 +192,8 @@ class Theme
 
     public function getConfig()
     {
-        if (! is_null($this->configCache)) {
+        if (!is_null($this->configCache))
             return $this->configCache;
-        }
 
         $configCache = [];
         $findInPaths = array_reverse(array_keys($this->getFindInPaths()));
@@ -207,9 +203,10 @@ class Theme
 
             foreach (array_get($config, 'form', []) as $key => $definitions) {
                 foreach ($definitions as $index => $definition) {
-                    if (! is_array($definition)) {
+                    if (!is_array($definition)) {
                         $configCache['form'][$key][$index] = $definition;
-                    } else {
+                    }
+                    else {
                         foreach ($definition as $fieldIndex => $field) {
                             $configCache['form'][$key][$index][$fieldIndex] = $field;
                         }
@@ -247,7 +244,6 @@ class Theme
 
     /**
      * Returns variables that should be passed to the asset combiner.
-     *
      * @return array
      */
     public function getAssetVariables()
@@ -256,13 +252,10 @@ class Theme
 
         $formFields = Themes_model::forTheme($this)->getFieldsConfig();
         foreach ($formFields as $attribute => $field) {
-            if (! $varNames = array_get($field, 'assetVar')) {
-                continue;
-            }
+            if (!$varNames = array_get($field, 'assetVar')) continue;
 
-            if (! is_array($varNames)) {
+            if (!is_array($varNames))
                 $varNames = [$varNames];
-            }
 
             foreach ($varNames as $varName) {
                 $result[$varName] = $this->{$attribute};
@@ -274,35 +267,28 @@ class Theme
 
     public function fillFromConfig()
     {
-        if (isset($this->config['code'])) {
+        if (isset($this->config['code']))
             $this->name = $this->config['code'];
-        }
 
-        if (isset($this->config['name'])) {
+        if (isset($this->config['name']))
             $this->label = $this->config['name'];
-        }
 
-        if (isset($this->config['parent'])) {
+        if (isset($this->config['parent']))
             $this->parentName = $this->config['parent'];
-        }
 
-        if (isset($this->config['description'])) {
+        if (isset($this->config['description']))
             $this->description = $this->config['description'];
-        }
 
-        if (isset($this->config['author'])) {
+        if (isset($this->config['author']))
             $this->author = $this->config['author'];
-        }
 
-        if (isset($this->config['require'])) {
+        if (isset($this->config['require']))
             $this->requires($this->config['require']);
-        }
 
         $this->screenshot('screenshot');
 
-        if (array_key_exists('locked', $this->config)) {
-            $this->locked = (bool) $this->config['locked'];
-        }
+        if (array_key_exists('locked', $this->config))
+            $this->locked = (bool)$this->config['locked'];
     }
 
     //
@@ -334,13 +320,12 @@ class Theme
 
     /**
      * Ensures this theme is registered as a Pagic source.
-     *
      * @return void
      */
     public function registerAsSource()
     {
         $resolver = App::make('pagic');
-        if (! $resolver->hasSource($this->getDirName())) {
+        if (!$resolver->hasSource($this->getDirName())) {
             $files = App::make('files');
 
             if ($this->hasParent()) {
@@ -348,7 +333,8 @@ class Theme
                     new FileSource($this->getPath(), $files),
                     new FileSource($this->getParentPath(), $files),
                 ]);
-            } else {
+            }
+            else {
                 $source = new FileSource($this->getPath(), $files);
             }
 
@@ -357,6 +343,7 @@ class Theme
     }
 
     /**
+     * @param $dirName
      * @return \Main\Template\Model|\Igniter\Flame\Pagic\Finder
      */
     public function onTemplate($dirName)
@@ -367,6 +354,7 @@ class Theme
     }
 
     /**
+     * @param $dirName
      * @return \Main\Template\Model
      */
     public function newTemplate($dirName)
@@ -377,15 +365,14 @@ class Theme
     }
 
     /**
+     * @param $dirName
      * @return mixed
-     *
      * @throws \Exception
      */
     public function getTemplateClass($dirName)
     {
-        if (! isset(self::$allowedTemplateModels[$dirName])) {
+        if (!isset(self::$allowedTemplateModels[$dirName]))
             throw new Exception(sprintf('Source Model not found for [%s].', $dirName));
-        }
 
         return self::$allowedTemplateModels[$dirName];
     }
@@ -393,7 +380,8 @@ class Theme
     /**
      * Implements the getter functionality.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return void
      */
     public function __get($name)
@@ -408,7 +396,8 @@ class Theme
     /**
      * Determine if an attribute exists on the object.
      *
-     * @param  string  $key
+     * @param string $key
+     *
      * @return bool
      */
     public function __isset($key)

@@ -14,21 +14,18 @@ class ExtensionRemove extends Command
 
     /**
      * The console command name.
-     *
      * @var string
      */
     protected $name = 'extension:remove';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Removes an existing extension.';
 
     /**
      * Execute the console command.
-     *
      * @return void
      */
     public function handle()
@@ -38,14 +35,14 @@ class ExtensionRemove extends Command
         $extensionManager = ExtensionManager::instance();
 
         $extensionName = $extensionManager->getIdentifier(strtolower($extensionName));
-        if (! $extensionManager->hasExtension($extensionName)) {
+        if (!$extensionManager->hasExtension($extensionName)) {
             return $this->error(sprintf('Unable to find a registered extension called "%s"', $extensionName));
         }
 
-        if (! $forceDelete && ! $this->confirmToProceed(sprintf(
-            'This will DELETE extension "%s" from the filesystem and database.',
-            $extensionName
-        ))) {
+        if (!$forceDelete && !$this->confirmToProceed(sprintf(
+                'This will DELETE extension "%s" from the filesystem and database.',
+                $extensionName
+            ))) {
             return;
         }
 
@@ -58,7 +55,6 @@ class ExtensionRemove extends Command
 
     /**
      * Get the console command arguments.
-     *
      * @return array
      */
     protected function getArguments()
@@ -70,7 +66,6 @@ class ExtensionRemove extends Command
 
     /**
      * Get the console command options.
-     *
      * @return array
      */
     protected function getOptions()
@@ -82,7 +77,6 @@ class ExtensionRemove extends Command
 
     /**
      * Get the default confirmation callback.
-     *
      * @return \Closure
      */
     protected function getDefaultConfirmCallback()

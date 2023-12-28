@@ -45,9 +45,8 @@ class News extends BaseDashboardWidget
     public function loadFeedItems()
     {
         $dom = $this->createRssDocument();
-        if (! $dom || ! $dom->load($this->newsRss)) {
+        if (!$dom || !$dom->load($this->newsRss))
             return [];
-        }
 
         $newsFeed = [];
         foreach ($dom->getElementsByTagName('entry') as $content) {

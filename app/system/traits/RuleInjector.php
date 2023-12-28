@@ -21,12 +21,12 @@ trait RuleInjector
      * Set the model to add unique identifier to rules when performing
      * validation.
      *
-     * @param  bool  $value
+     * @param  bool $value
      * @return void
      */
     public function setInjectRuleParameters($value)
     {
-        $this->injectRuleParameters = (bool) $value;
+        $this->injectRuleParameters = (bool)$value;
     }
 
     /**
@@ -38,6 +38,7 @@ trait RuleInjector
      * primary key to the unique rules so that the validation
      * will work as expected.
      *
+     * @param  array $rules
      * @return array
      */
     protected function injectParametersToRules(array $rules)
@@ -69,7 +70,7 @@ trait RuleInjector
      * Get the dynamic method name for a unique identifier or custom injector rule if it
      * exists, otherwise return false.
      *
-     * @param  string  $validationRule
+     * @param  string $validationRule
      * @return mixed
      */
     protected function getRuleInjectorMethod($validationRule)
@@ -83,8 +84,8 @@ trait RuleInjector
      * Prepare a rule, adding the table name, column and model identifier
      * if required.
      *
-     * @param  array  $parameters
-     * @param  string  $field
+     * @param  array $parameters
+     * @param  string $field
      * @return string
      */
     protected function prepareUniqueRule($parameters, $field)
@@ -100,25 +101,25 @@ trait RuleInjector
         }
 
         // If the field name isn't get, infer it.
-        if (! isset($parameters[1])) {
+        if (!isset($parameters[1])) {
             $parameters[1] = $field;
         }
 
         if ($this->getModel()->exists) {
             // If the identifier isn't set, infer it.
-            if (! isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
+            if (!isset($parameters[2]) || strtolower($parameters[2]) === 'null') {
                 $parameters[2] = $this->getModel()->getKey();
             }
 
             // If the primary key isn't set, infer it.
-            if (! isset($parameters[3])) {
+            if (!isset($parameters[3])) {
                 $parameters[3] = $this->getModel()->getKeyName();
             }
 
             // If the additional where clause isn't set, infer it.
             // Example: unique:users,email,123,id,username,NULL
             foreach ($parameters as $key => $parameter) {
-                if (strtolower((string) $parameter) === 'null') {
+                if (strtolower((string)$parameter) === 'null') {
                     // Maintain NULL as string in case the model returns a null value
                     $value = $this->getModel()->{$parameters[$key - 1]};
                     $parameters[$key] = is_null($value) ? 'NULL' : $value;
@@ -132,8 +133,8 @@ trait RuleInjector
     /**
      * Prepare a unique_with rule, adding the model identifier if required.
      *
-     * @param  array  $parameters
-     * @param  string  $field
+     * @param  array $parameters
+     * @param  string $field
      * @return string
      */
     protected function prepareUniqueWithRule($parameters, $field)
@@ -142,7 +143,7 @@ trait RuleInjector
         // Let's just check the model identifier.
         if ($this->getModel()->exists) {
             // If the identifier isn't set, add it.
-            if (count($parameters) < 3 || ! preg_match('/^\d+(\s?=\s?\w*)?$/', last($parameters))) {
+            if (count($parameters) < 3 || !preg_match('/^\d+(\s?=\s?\w*)?$/', last($parameters))) {
                 $parameters[] = $this->getModel()->getKey();
             }
         }

@@ -38,7 +38,6 @@ trait HasViewBag
      * Returns the configured view bag component.
      * This method is used only in the back-end and for internal system needs when
      * the standard way to access components is not an option.
-     *
      * @return \Main\Components\ViewBag
      */
     public function getViewBag()
@@ -49,7 +48,7 @@ trait HasViewBag
 
         $componentName = 'viewBag';
         // Ensure viewBag component has not already been defined on template
-        if (! isset($this->settings['components'][$componentName])) {
+        if (!isset($this->settings['components'][$componentName])) {
             $viewBag = new ViewBag(null, []);
             $viewBag->name = $componentName;
 
@@ -62,7 +61,6 @@ trait HasViewBag
     /**
      * Copies view bag properties to the view bag array.
      * This is required for the back-end editors.
-     *
      * @return void
      */
     protected function fillViewBagArray()

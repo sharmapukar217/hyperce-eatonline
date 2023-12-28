@@ -20,7 +20,8 @@ trait ManagesUpdates
 
             try {
                 $json = UpdateManager::instance()->searchItems($itemType, $searchQuery);
-            } catch (Exception $ex) {
+            }
+            catch (Exception $ex) {
                 $json = $ex->getMessage();
             }
         }
@@ -32,9 +33,8 @@ trait ManagesUpdates
     {
         $itemsCodes = post('install_items') ?? [];
         $items = collect(post('items') ?? [])->whereIn('name', $itemsCodes);
-        if ($items->isEmpty()) {
+        if ($items->isEmpty())
             throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
-        }
 
         $this->validateItems();
 
@@ -49,9 +49,8 @@ trait ManagesUpdates
     public function onApplyItems()
     {
         $items = post('items') ?? [];
-        if (! count($items)) {
+        if (!count($items))
             throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
-        }
 
         $this->validateItems();
 
@@ -68,9 +67,8 @@ trait ManagesUpdates
     public function onApplyUpdate()
     {
         $items = post('items') ?? [];
-        if (! count($items)) {
+        if (!count($items))
             throw new ApplicationException(lang('system::lang.updates.alert_no_items'));
-        }
 
         $this->validateItems();
 
@@ -106,9 +104,8 @@ trait ManagesUpdates
     public function onIgnoreUpdate()
     {
         $items = post('items');
-        if (! $items || count($items) < 1) {
+        if (!$items || count($items) < 1)
             throw new ApplicationException(lang('system::lang.updates.alert_item_to_ignore'));
-        }
 
         $updateManager = UpdateManager::instance();
 
@@ -124,9 +121,8 @@ trait ManagesUpdates
     public function onApplyCarte()
     {
         $carteKey = post('carte_key');
-        if (! strlen($carteKey)) {
+        if (!strlen($carteKey))
             throw new ApplicationException(lang('system::lang.updates.alert_no_carte_key'));
-        }
 
         $response = UpdateManager::instance()->applySiteDetail($carteKey);
 
@@ -226,7 +222,7 @@ trait ManagesUpdates
 
         $params = [];
         if (post('step') != 'complete') {
-            $params = ! isset($meta['code']) ? [] : [
+            $params = !isset($meta['code']) ? [] : [
                 'name' => $meta['code'],
                 'type' => $meta['type'],
                 'ver' => $meta['version'],
@@ -242,36 +238,26 @@ trait ManagesUpdates
             case 'downloadExtension':
             case 'downloadTheme':
                 $result = $updateManager->downloadFile($meta['code'], $meta['hash'], $params);
-                if ($result) {
-                    $json['result'] = 'success';
-                }
+                if ($result) $json['result'] = 'success';
                 break;
 
             case 'extractCore':
                 $response = $updateManager->extractCore($meta['code']);
-                if ($response) {
-                    $json['result'] = 'success';
-                }
+                if ($response) $json['result'] = 'success';
                 break;
 
             case 'extractExtension':
                 $response = $updateManager->extractFile($meta['code'], extension_path('/'));
-                if ($response) {
-                    $json['result'] = 'success';
-                }
+                if ($response) $json['result'] = 'success';
                 break;
             case 'extractTheme':
                 $response = $updateManager->extractFile($meta['code'], theme_path('/'));
-                if ($response) {
-                    $json['result'] = 'success';
-                }
+                if ($response) $json['result'] = 'success';
                 break;
 
             case 'complete':
                 $response = $this->completeProcess($meta['items']);
-                if ($response) {
-                    $json['result'] = 'success';
-                }
+                if ($response) $json['result'] = 'success';
                 break;
         }
 
@@ -280,9 +266,8 @@ trait ManagesUpdates
 
     protected function completeProcess($items)
     {
-        if (! count($items)) {
+        if (!count($items))
             return false;
-        }
 
         foreach ($items as $item) {
             if ($item['type'] == 'core') {
@@ -311,9 +296,8 @@ trait ManagesUpdates
     protected function getActionFromItems($code, $itemNames)
     {
         foreach ($itemNames as $itemName) {
-            if ($code == $itemName['name']) {
+            if ($code == $itemName['name'])
                 return $itemName['action'];
-            }
         }
     }
 
@@ -352,7 +336,8 @@ trait ManagesUpdates
                 'meta.description' => lang('system::lang.updates.label_meta_description'),
                 'meta.action' => lang('system::lang.updates.label_meta_action'),
             ];
-        } else {
+        }
+        else {
             $rules = ['meta.items' => ['required', 'array']];
             $attributes = ['meta.items' => lang('system::lang.updates.label_meta_items')];
         }

@@ -7,7 +7,6 @@ Route::post('/cartapi', function (Request $request){
     return ["response" => $request->headers_list()];
 });
 
-
 // required form fields: menuId, rowId(optional), menu_options, quantity
 Route::post('/api/update-cart', [\Igniter\Demo\Classes\CartApi::class, 'updateCart']);
 

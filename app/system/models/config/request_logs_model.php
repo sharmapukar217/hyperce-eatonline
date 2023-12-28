@@ -1,5 +1,4 @@
 <?php
-
 $config['list']['filter'] = [
     'search' => [
         'prompt' => 'lang:system::lang.request_logs.text_filter_search',

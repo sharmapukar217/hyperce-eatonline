@@ -26,18 +26,16 @@ trait SendsMailTemplate
         $vars = $this->mailGetData();
 
         $result = $this->fireEvent('model.mailGetData', [$view, $recipientType]);
-        if ($result && is_array($result)) {
+        if ($result && is_array($result))
             $vars = array_merge(...$result) + $vars;
-        }
 
         Mail::queue($view, $vars, $this->mailBuildMessage($recipientType));
     }
 
     protected function mailBuildMessage($recipientType = null)
     {
-        if (is_callable($recipientType)) {
+        if (is_callable($recipientType))
             return $recipientType;
-        }
 
         $replyTo = $this->mailGetReplyTo($recipientType);
         $recipients = $this->mailGetRecipients($recipientType);
@@ -45,9 +43,7 @@ trait SendsMailTemplate
         return function ($message) use ($recipients, $replyTo) {
             foreach ($recipients as $recipient) {
                 $message->to(...$recipient);
-                if ($replyTo) {
-                    $message->replyTo(...$replyTo);
-                }
+                if ($replyTo) $message->replyTo(...$replyTo);
             }
         };
     }

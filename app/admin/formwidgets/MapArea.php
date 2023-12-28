@@ -82,10 +82,14 @@ class MapArea extends BaseFormWidget
             'sortable',
         ]);
 
+
+        // dd($this->form);
+
         $this->areaColors = Location_areas_model::$areaColors;
 
         $fieldName = $this->formField->getName(false);
         $this->sortableInputName = self::SORT_PREFIX.$fieldName;
+
     }
 
     public function loadAssets()
@@ -150,11 +154,12 @@ class MapArea extends BaseFormWidget
         return $value;
     }
 
-    public function onLoadRecord()
+    public function onLoadRecord() 
     {
         $model = strlen($areaId = post('recordId'))
             ? $this->findFormModel($areaId)
             : $this->createFormModel();
+
 
         return $this->makePartial('maparea/area_form', [
             'formAreaId' => $areaId,
@@ -261,6 +266,8 @@ class MapArea extends BaseFormWidget
 
             $result[$key] = (object)$area;
         }
+
+        // dd($result);
 
         return $this->mapAreas = $result;
     }

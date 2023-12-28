@@ -3,7 +3,7 @@
 /**
  * Country helper functions
  */
-if (! function_exists('format_address')) {
+if (!function_exists('format_address')) {
 
     function format_address($address, $useLineBreaks = true)
     {
@@ -11,7 +11,7 @@ if (! function_exists('format_address')) {
     }
 }
 
-if (! function_exists('countries')) {
+if (!function_exists('countries')) {
 
     function countries($column = 'country_name', $key = 'country_id')
     {

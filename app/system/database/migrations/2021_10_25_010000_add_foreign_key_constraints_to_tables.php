@@ -15,22 +15,22 @@ class AddForeignKeyConstraintsToTables extends Migration
 
         // Commented out so foreign keys are not added on new installations.
         // For existing installations, another migration has been added to drop all foreign keys.
-        //        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
-        //            foreach ($constraints as $options) {
-        //                $this->addForeignKey($tableName, $options);
-        //            }
-        //        }
+//        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
+//            foreach ($constraints as $options) {
+//                $this->addForeignKey($tableName, $options);
+//            }
+//        }
 
         Schema::enableForeignKeyConstraints();
     }
 
     public function down()
     {
-        //        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
-        //            foreach ($constraints as $options) {
-        //                $this->dropForeignKey($tableName, $options);
-        //            }
-        //        }
+//        foreach ($this->getForeignConstraints() as $tableName => $constraints) {
+//            foreach ($constraints as $options) {
+//                $this->dropForeignKey($tableName, $options);
+//            }
+//        }
     }
 
     protected function addForeignKey($tableName, $options)
@@ -38,15 +38,14 @@ class AddForeignKeyConstraintsToTables extends Migration
         Schema::table($tableName, function (Blueprint $table) use ($options) {
             $foreignTableName = $options[0];
 
-            $keys = (array) $options[1];
+            $keys = (array)$options[1];
             $foreignKey = $keys[0];
             $parentKey = $keys[1] ?? $keys[0];
 
             $blueprint = $table->foreignId($foreignKey);
 
-            if (array_get($options, 'nullable', true)) {
+            if (array_get($options, 'nullable', true))
                 $blueprint->nullable();
-            }
 
             $blueprint->change();
 
@@ -62,12 +61,13 @@ class AddForeignKeyConstraintsToTables extends Migration
     {
         try {
             Schema::table($tableName, function (Blueprint $table) use ($options) {
-                $keys = (array) $options[1];
+                $keys = (array)$options[1];
                 $foreignKey = $keys[0];
 
                 $table->dropForeign([$foreignKey]);
             });
-        } catch (\Exception $ex) {
+        }
+        catch (\Exception $ex) {
             Log::error($ex);
         }
     }

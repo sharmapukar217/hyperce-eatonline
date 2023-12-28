@@ -12,9 +12,8 @@ class AddUuidColumnToFailedJobsTable extends Migration
 {
     public function up()
     {
-        if (! Schema::hasTable('failed_jobs')) {
+        if (!Schema::hasTable('failed_jobs'))
             return;
-        }
 
         Schema::table('failed_jobs', function (Blueprint $table) {
             $table->string('uuid')->after('id')->nullable()->unique();
@@ -23,7 +22,7 @@ class AddUuidColumnToFailedJobsTable extends Migration
         DB::table('failed_jobs')->whereNull('uuid')->cursor()->each(function ($job) {
             DB::table('failed_jobs')
                 ->where('id', $job->id)
-                ->update(['uuid' => (string) Str::uuid()]);
+                ->update(['uuid' => (string)Str::uuid()]);
         });
     }
 

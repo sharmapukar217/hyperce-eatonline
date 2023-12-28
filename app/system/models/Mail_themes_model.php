@@ -9,34 +9,22 @@ use Illuminate\Support\Facades\Cache;
 
 /**
  * MailThemes Model Class
- *
  * @method static instance()
  * @method static get($var, $default)
  */
 class Mail_themes_model extends Model
 {
     const WHITE_COLOR = '#fff';
-
     const BODY_BG = '#f5f8fa';
-
     const PRIMARY_BG = '#3498db';
-
     const POSITIVE_BG = '#31ac5f';
-
     const NEGATIVE_BG = '#ab2a1c';
-
     const HEADER_COLOR = '#bbbfc3';
-
     const HEADING_COLOR = '#2f3133';
-
     const TEXT_COLOR = '#74787e';
-
     const LINK_COLOR = '#0181b9';
-
     const FOOTER_COLOR = '#aeaeae';
-
     const BORDER_COLOR = '#edeff2';
-
     const PROMOTION_BORDER_COLOR = '#9ba2ab';
 
     public $implement = ['System\Actions\SettingsModel'];
@@ -59,7 +47,6 @@ class Mail_themes_model extends Model
     /**
      * Initialize the seed data for this model. This only executes when the
      * model is first created or reset to default.
-     *
      * @return void
      */
     public function initSettingsData()
@@ -94,7 +81,8 @@ class Mail_themes_model extends Model
         try {
             $customCss = self::compileCss();
             Cache::forever($cacheKey, $customCss);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $customCss = '/* '.$ex->getMessage().' */';
         }
 

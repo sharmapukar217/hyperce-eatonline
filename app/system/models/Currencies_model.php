@@ -57,7 +57,7 @@ class Currencies_model extends Currency
 
         $searchableFields = ['currency_name', 'currency_code'];
 
-        if (! is_array($sort)) {
+        if (!is_array($sort)) {
             $sort = [$sort];
         }
 
@@ -93,7 +93,7 @@ class Currencies_model extends Currency
 
     public function makeDefault()
     {
-        if (! $this->currency_status) {
+        if (!$this->currency_status) {
             throw new ValidationException(['currency_status' => sprintf(
                 lang('admin::lang.alert_error_set_default'), $this->currency_name
             )]);
@@ -105,7 +105,6 @@ class Currencies_model extends Currency
 
     /**
      * Returns the default currency defined.
-     *
      * @return self
      */
     public static function getDefault()
@@ -118,7 +117,7 @@ class Currencies_model extends Currency
             ->orWhere('currency_code', setting('default_currency_code'))
             ->first();
 
-        if (! $defaultCurrency) {
+        if (!$defaultCurrency) {
             if ($defaultCurrency = self::whereIsEnabled()->first()) {
                 $defaultCurrency->makeDefault();
             }

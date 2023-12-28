@@ -38,7 +38,7 @@ class IgniterUpdate extends Command
         $updates = $updateManager->requestUpdateList($forceUpdate);
         $itemsToUpdate = array_get($updates, 'items');
 
-        if (! $itemsToUpdate) {
+        if (!$itemsToUpdate) {
             $this->output->writeln('<info>No new updates found</info>');
 
             return;

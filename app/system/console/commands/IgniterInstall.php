@@ -63,7 +63,7 @@ class IgniterInstall extends Command
 
         if (
             App::hasDatabase() &&
-            ! $this->confirm('Application appears to be installed already. Continue anyway?', false)
+            !$this->confirm('Application appears to be installed already. Continue anyway?', false)
         ) {
             return;
         }
@@ -95,9 +95,8 @@ class IgniterInstall extends Command
 
     protected function rewriteEnvFile()
     {
-        if (file_exists(base_path().'/.env') && ! $this->confirm('Rewrite environment file?', false)) {
+        if (file_exists(base_path().'/.env') && !$this->confirm('Rewrite environment file?', false))
             return;
-        }
 
         $this->moveExampleFile('env', null, 'backup');
         $this->copyExampleFile('env', 'example', null);
@@ -111,9 +110,7 @@ class IgniterInstall extends Command
         foreach ($this->dbConfig as $key => $value) {
             Config::set("database.connections.$name.".strtolower($key), $value);
 
-            if ($key === 'password') {
-                $value = '"'.$value.'"';
-            }
+            if ($key === 'password') $value = '"'.$value.'"';
             $this->replaceInEnv('DB_'.strtoupper($key).'=', 'DB_'.strtoupper($key).'='.$value);
         }
 
@@ -172,7 +169,7 @@ class IgniterInstall extends Command
         });
 
         $password = $this->output->ask('Admin Password', '123456', function ($answer) {
-            if (! is_string($answer) || strlen($answer) < 6 || strlen($answer) > 32) {
+            if (!is_string($answer) || strlen($answer) < 6 || strlen($answer) > 32) {
                 throw new \RuntimeException('Please specify the administrator password, at least 6 characters and not more than 32 characters.');
             }
 
@@ -256,9 +253,8 @@ class IgniterInstall extends Command
     {
         // /$old.$name => /$new.$name
         if (file_exists(base_path().'/'.$old.'.'.$name)) {
-            if (file_exists(base_path().'/'.$new.'.'.$name)) {
+            if (file_exists(base_path().'/'.$new.'.'.$name))
                 unlink(base_path().'/'.$new.'.'.$name);
-            }
 
             copy(base_path().'/'.$old.'.'.$name, base_path().'/'.$new.'.'.$name);
         }

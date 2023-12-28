@@ -17,8 +17,8 @@ use System\Traits\PropertyContainer;
  */
 abstract class BaseComponent extends Extendable
 {
-    use AssetMaker;
     use EventEmitter;
+    use AssetMaker;
     use PropertyContainer;
 
     public $defaultPartial = 'default';
@@ -69,8 +69,8 @@ abstract class BaseComponent extends Extendable
     /**
      * Class constructor
      *
-     * @param  \Igniter\Flame\Pagic\TemplateCode  $page
-     * @param  array  $properties
+     * @param \Igniter\Flame\Pagic\TemplateCode $page
+     * @param array $properties
      */
     public function __construct($page = null, $properties = [])
     {
@@ -120,9 +120,7 @@ abstract class BaseComponent extends Extendable
 
     /**
      * Renders a requested partial in context of this component,
-     *
      * @return mixed
-     *
      * @see \Main\Classes\MainController::renderPartial for usage.
      */
     public function renderPartial()
@@ -158,9 +156,8 @@ abstract class BaseComponent extends Extendable
     public function param($name, $default = null)
     {
         $segment = $this->controller->param($name);
-        if (is_null($segment)) {
+        if (is_null($segment))
             $segment = input($name);
-        }
 
         return is_null($segment) ? $default : $segment;
     }
@@ -172,15 +169,17 @@ abstract class BaseComponent extends Extendable
     /**
      * Dynamically handle calls into the controller instance.
      *
-     * @param  string  $method
-     * @param  array  $parameters
+     * @param string $method
+     * @param array $parameters
+     *
      * @return mixed
      */
     public function __call($method, $parameters)
     {
         try {
             return parent::__call($method, $parameters);
-        } catch (BadMethodCallException $ex) {
+        }
+        catch (BadMethodCallException $ex) {
         }
 
         if (method_exists($this->controller, $method)) {

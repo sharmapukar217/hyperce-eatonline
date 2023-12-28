@@ -86,7 +86,7 @@ class Components extends BaseFormWidget
     {
         $result = [];
         $components = array_get($this->data->settings, 'components');
-        foreach ((array) $value as $index => $alias) {
+        foreach ((array)$value as $index => $alias) {
             $result[sprintf('[%s]', $alias)] = $components[$alias];
         }
 
@@ -105,9 +105,8 @@ class Components extends BaseFormWidget
         $context = post('context');
 
         $formTitle = $context == 'create' ? $this->addTitle : $this->editTitle;
-        if ($context === 'partial') {
+        if ($context === 'partial')
             $formTitle = $this->copyPartialTitle;
-        }
 
         return $this->makePartial('~/app/admin/formwidgets/recordeditor/form', [
             'formRecordId' => $codeAlias,
@@ -131,13 +130,11 @@ class Components extends BaseFormWidget
             ? post($this->formField->arrayName.'[componentData][component]')
             : post('recordId');
 
-        if (! strlen($codeAlias)) {
+        if (!strlen($codeAlias))
             throw new ApplicationException('Invalid component selected');
-        }
 
-        if (! $template = $this->getTemplate()) {
+        if (!$template = $this->getTemplate())
             throw new ApplicationException('Template file not found');
-        }
 
         $partialToOverride = post($this->formField->arrayName.'[componentData][partial]');
 
@@ -147,7 +144,8 @@ class Components extends BaseFormWidget
             flash()->success(sprintf(lang('admin::lang.alert_success'),
                 'Component partial copied'
             ))->now();
-        } else {
+        }
+        else {
             $this->updateComponent($codeAlias, $isCreateContext, $template);
 
             flash()->success(sprintf(lang('admin::lang.alert_success'),
@@ -170,9 +168,8 @@ class Components extends BaseFormWidget
     public function onRemoveComponent()
     {
         $codeAlias = post('code');
-        if (! strlen($codeAlias)) {
+        if (!strlen($codeAlias))
             throw new ApplicationException('Invalid component selected');
-        }
 
         $template = $this->getTemplate();
 
@@ -193,9 +190,8 @@ class Components extends BaseFormWidget
     protected function getComponents()
     {
         $components = [];
-        if (! $loadValue = (array) $this->getLoadValue()) {
+        if (!$loadValue = (array)$this->getLoadValue())
             return $components;
-        }
 
         foreach ($loadValue as $codeAlias => $properties) {
             [$code, $alias] = $this->getCodeAlias($codeAlias);
@@ -210,11 +206,12 @@ class Components extends BaseFormWidget
             try {
                 $this->manager->makeComponent($code, $alias, $properties);
                 $definition['alias'] = $codeAlias;
-            } catch (Exception $ex) {
+            }
+            catch (Exception $ex) {
                 $definition['fatalError'] = $ex->getMessage();
             }
 
-            $components[$codeAlias] = (object) $definition;
+            $components[$codeAlias] = (object)$definition;
         }
 
         return $components;
@@ -225,7 +222,7 @@ class Components extends BaseFormWidget
         $componentObj = null;
         if (strlen($codeAlias)) {
             [$code, $alias] = $this->getCodeAlias($codeAlias);
-            $propertyValues = array_get((array) $this->getLoadValue(), $codeAlias, []);
+            $propertyValues = array_get((array)$this->getLoadValue(), $codeAlias, []);
             $componentObj = $this->manager->makeComponent($code, $alias, $propertyValues);
             $componentObj->alias = $codeAlias;
         }
@@ -252,9 +249,8 @@ class Components extends BaseFormWidget
         $widget = $this->makeWidget('Admin\Widgets\Form', $formConfig);
 
         $widget->bindEvent('form.extendFields', function ($allFields) use ($widget, $componentObj) {
-            if (! $formField = $widget->getField('partial')) {
+            if (!$formField = $widget->getField('partial'))
                 return;
-            }
 
             $this->extendPartialField($formField, $componentObj);
         });
@@ -282,11 +278,10 @@ class Components extends BaseFormWidget
 
     protected function getUniqueAlias($alias)
     {
-        $existingComponents = (array) $this->getLoadValue();
+        $existingComponents = (array)$this->getLoadValue();
         while (isset($existingComponents[$alias])) {
-            if (strpos($alias, ' ') === false) {
+            if (strpos($alias, ' ') === false)
                 $alias .= ' '.$alias;
-            }
 
             $alias .= 'Copy';
         }
@@ -337,9 +332,8 @@ class Components extends BaseFormWidget
         $properties['alias'] = sprintf('[%s]', $properties['alias']);
 
         return array_map(function ($propertyValue) {
-            if (is_numeric($propertyValue)) {
-                $propertyValue += 0;
-            } // Convert to int or float
+            if (is_numeric($propertyValue))
+                $propertyValue += 0; // Convert to int or float
 
             return $propertyValue;
         }, $properties);
@@ -367,17 +361,14 @@ class Components extends BaseFormWidget
         $activeTheme = $this->model->getTheme();
         $themePartialPath = sprintf('%s/%s/%s', $activeTheme->path, '_partials', $componentObj->alias);
 
-        if (! File::exists($componentObj->getPath().'/'.$fileName)) {
+        if (!File::exists($componentObj->getPath().'/'.$fileName))
             throw new ApplicationException('The selected component partial does not exist in the component directory');
-        }
 
-        if (File::exists($themePartialPath.'/'.$fileName)) {
+        if (File::exists($themePartialPath.'/'.$fileName))
             throw new ApplicationException('The selected component partial already exists in active theme partials directory.');
-        }
 
-        if (! File::exists($themePartialPath)) {
+        if (!File::exists($themePartialPath))
             File::makeDirectory($themePartialPath, 077, true);
-        }
 
         File::copy($componentObj->getPath().'/'.$fileName, $themePartialPath.'/'.$fileName);
     }

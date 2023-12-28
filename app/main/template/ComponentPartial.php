@@ -48,6 +48,8 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Creates an instance of the object and associates it with a component.
+     *
+     * @param \System\Classes\BaseComponent $component
      */
     public function __construct(BaseComponent $component)
     {
@@ -57,8 +59,8 @@ class ComponentPartial extends Extendable implements TemplateSource
     }
 
     /**
-     * @param  \System\Classes\BaseComponent  $component
-     * @param  string  $fileName
+     * @param \System\Classes\BaseComponent $component
+     * @param string $fileName
      * @return \Main\Template\ComponentPartial|mixed
      */
     public static function load($component, $fileName)
@@ -67,8 +69,8 @@ class ComponentPartial extends Extendable implements TemplateSource
     }
 
     /**
-     * @param  \System\Classes\BaseComponent  $component
-     * @param  string  $fileName
+     * @param \System\Classes\BaseComponent $component
+     * @param string $fileName
      * @return \Main\Template\ComponentPartial|mixed
      */
     public static function loadCached($component, $fileName)
@@ -77,9 +79,9 @@ class ComponentPartial extends Extendable implements TemplateSource
     }
 
     /**
-     * @param  \Main\Classes\Theme  $theme
-     * @param  \System\Classes\BaseComponent  $component
-     * @param  string  $fileName
+     * @param \Main\Classes\Theme $theme
+     * @param \System\Classes\BaseComponent $component
+     * @param string $fileName
      * @return mixed
      */
     public static function loadOverrideCached($theme, $component, $fileName)
@@ -96,14 +98,15 @@ class ComponentPartial extends Extendable implements TemplateSource
     /**
      * Find a single template by its file name.
      *
-     * @param  string  $fileName
+     * @param string $fileName
+     *
      * @return mixed|static
      */
     public function find($fileName)
     {
         $filePath = $this->getFilePath($fileName);
 
-        if (! File::isFile($filePath)) {
+        if (!File::isFile($filePath)) {
             return null;
         }
 
@@ -121,15 +124,16 @@ class ComponentPartial extends Extendable implements TemplateSource
     /**
      * Returns true if the specific component contains a matching partial.
      *
-     * @param  BaseComponent  $component Specifies a component the file belongs to.
-     * @param  string  $fileName Specifies the file name to check.
+     * @param BaseComponent $component Specifies a component the file belongs to.
+     * @param string $fileName Specifies the file name to check.
+     *
      * @return bool
      */
     public static function check(BaseComponent $component, $fileName)
     {
         $partial = new static($component);
         $filePath = $partial->getFilePath($fileName);
-        if (File::extension($filePath) === '') {
+        if ('' === File::extension($filePath)) {
             $filePath .= '.'.$partial->getDefaultExtension();
         }
 
@@ -138,7 +142,6 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the key used by the Template cache.
-     *
      * @return string
      */
     public function getTemplateCacheKey()
@@ -148,7 +151,6 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the default extension used by this template.
-     *
      * @return string
      */
     public function getDefaultExtension()
@@ -159,7 +161,8 @@ class ComponentPartial extends Extendable implements TemplateSource
     /**
      * Returns the absolute file path.
      *
-     * @param  string  $fileName Specifies the file name to return the path to.
+     * @param string $fileName Specifies the file name to return the path to.
+     *
      * @return string
      */
     public function getFilePath($fileName = null)
@@ -172,13 +175,11 @@ class ComponentPartial extends Extendable implements TemplateSource
         $componentPath = $component->getPath();
 
         $basename = $fileName;
-        if (! strlen(File::extension($basename))) {
+        if (!strlen(File::extension($basename)))
             $basename .= '.blade.'.$this->defaultExtension;
-        }
 
-        if (File::isFile($path = $componentPath.'/'.$basename)) {
+        if (File::isFile($path = $componentPath.'/'.$basename))
             return $path;
-        }
 
         // Check the shared "/partials" directory for the partial
         $sharedPath = dirname($componentPath).'/partials/'.$basename;
@@ -191,7 +192,6 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the file name.
-     *
      * @return string
      */
     public function getFileName()
@@ -201,7 +201,6 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the file name without the extension.
-     *
      * @return string
      */
     public function getBaseFileName()
@@ -216,7 +215,6 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Returns the file content.
-     *
      * @return string
      */
     public function getContent()
@@ -226,7 +224,6 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Gets the markup section of a template
-     *
      * @return string The template source code
      */
     public function getMarkup()
@@ -236,7 +233,6 @@ class ComponentPartial extends Extendable implements TemplateSource
 
     /**
      * Gets the code section of a template
-     *
      * @return string The template source code
      */
     public function getCode()

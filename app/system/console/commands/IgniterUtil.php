@@ -16,29 +16,26 @@ class IgniterUtil extends Command
 {
     /**
      * The console command name.
-     *
      * @var string
      */
     protected $name = 'igniter:util';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'TastyIgniter Utility commands.';
 
     /**
      * Execute the console command.
-     *
      * @return void
      */
     public function handle()
     {
-        $command = implode(' ', (array) $this->argument('name'));
+        $command = implode(' ', (array)$this->argument('name'));
         $method = 'util'.studly_case($command);
 
-        if (! method_exists($this, $method)) {
+        if (!method_exists($this, $method)) {
             $this->error(sprintf('Utility command "%s" does not exist!', $command));
 
             return;
@@ -49,7 +46,6 @@ class IgniterUtil extends Command
 
     /**
      * Get the console command arguments.
-     *
      * @return array
      */
     protected function getArguments()
@@ -76,7 +72,7 @@ class IgniterUtil extends Command
     {
         $this->comment('Setting TastyIgniter version number...');
 
-        if (! App::hasDatabase()) {
+        if (!App::hasDatabase()) {
             $this->comment('Skipping - No database detected.');
 
             return;
@@ -86,9 +82,8 @@ class IgniterUtil extends Command
 
         $this->comment('*** TastyIgniter sets latest version: '.params('ti_version'));
 
-        if ($this->option('extensions')) {
+        if ($this->option('extensions'))
             $this->setItemsVersion();
-        }
 
         $this->comment('-');
         sleep(1);
@@ -115,11 +110,11 @@ class IgniterUtil extends Command
     {
         $this->comment('Compiling registered asset bundles...');
 
-        config()->set('system.enableAssetMinify', (bool) $this->option('minify', true));
+        config()->set('system.enableAssetMinify', (bool)$this->option('minify', true));
         $appContext = $this->option('admin') ? 'admin' : 'main';
         $bundles = Assets::getBundles($type, $appContext);
 
-        if (! $bundles) {
+        if (!$bundles) {
             $this->comment('Nothing to compile!');
 
             return;
@@ -159,7 +154,7 @@ class IgniterUtil extends Command
     protected function utilSetCarte()
     {
         $carteKey = $this->option('carteKey');
-        if (! strlen($carteKey)) {
+        if (!strlen($carteKey)) {
             $this->error('No carteKey defined, use --carteKey=<key> to set a Carte');
 
             return;

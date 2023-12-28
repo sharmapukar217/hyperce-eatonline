@@ -28,7 +28,7 @@ class ModelAction
     /**
      * ModelAction constructor.
      *
-     * @param  null  $model
+     * @param null $model
      *
      * @throws \Igniter\Flame\Exception\SystemException
      */
@@ -37,7 +37,7 @@ class ModelAction
         $this->model = $model;
 
         foreach ($this->requiredProperties as $property) {
-            if (! isset($model->{$property})) {
+            if (!isset($model->{$property})) {
                 throw new SystemException(sprintf(
                     'Class %s must define property %s used by %s',
                     get_class($model), $property, get_called_class()

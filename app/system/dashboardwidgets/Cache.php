@@ -59,7 +59,7 @@ class Cache extends BaseDashboardWidget
         foreach (self::$caches as $cacheInfo) {
             $size = $this->folderSize(storage_path().'/'.$cacheInfo['path']);
 
-            $cacheSizes[] = (object) [
+            $cacheSizes[] = (object)[
                 'label' => $cacheInfo['path'],
                 'color' => $cacheInfo['color'],
                 'size' => $size,
@@ -78,7 +78,8 @@ class Cache extends BaseDashboardWidget
     {
         try {
             CacheHelper::clear();
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             // ...
         }
 

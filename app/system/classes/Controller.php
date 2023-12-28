@@ -24,7 +24,6 @@ use System\Facades\Assets;
  * /admin/(any)             `admin`, `location` or `system` app directory
  * /admin/acme/cod/(any)    `Acme.Cod` extension
  * /(any)                   `main` app directory
- *
  * @see \Admin\Classes\AdminController|\Main\Classes\MainController  controller class
  */
 class Controller extends IlluminateController
@@ -74,6 +73,8 @@ class Controller extends IlluminateController
 
     /**
      * Extend this object properties upon construction.
+     *
+     * @param Closure $callback
      */
     public static function extend(Closure $callback)
     {
@@ -83,12 +84,13 @@ class Controller extends IlluminateController
     /**
      * Finds and serves the request using the main controller.
      *
-     * @param  string  $url Specifies the requested page URL.
+     * @param string $url Specifies the requested page URL.
+     *
      * @return string Returns the processed page content.
      */
     public function run($url = '/')
     {
-        if (! App::hasDatabase()) {
+        if (!App::hasDatabase()) {
             return Response::make(View::make('system::no_database'));
         }
 
@@ -98,13 +100,14 @@ class Controller extends IlluminateController
     /**
      * Finds and serves the request using the admin controller.
      *
-     * @param  string  $url Specifies the requested page URL.
+     * @param string $url Specifies the requested page URL.
      * If the parameter is omitted, the dashboard URL used.
+     *
      * @return string Returns the processed page content.
      */
     public function runAdmin($url = '/')
     {
-        if (! App::hasDatabase()) {
+        if (!App::hasDatabase()) {
             return Response::make(View::make('system::no_database'));
         }
 
@@ -118,7 +121,8 @@ class Controller extends IlluminateController
     /**
      * Combines JavaScript and StyleSheet assets.
      *
-     * @param  string  $asset
+     * @param string $asset
+     *
      * @return string
      */
     public function combineAssets($asset)
@@ -128,7 +132,8 @@ class Controller extends IlluminateController
             $cacheKey = $parts[0];
 
             return Assets::combineGetContents($cacheKey);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $errorMessage = ErrorHandler::getDetailedMessage($ex);
 
             return '/* '.e($errorMessage).' */';
@@ -137,14 +142,13 @@ class Controller extends IlluminateController
 
     protected function locateController($url)
     {
-        if (isset($this->requestedCache)) {
+        if (isset($this->requestedCache))
             return $this->requestedCache;
-        }
 
         $segments = RouterHelper::segmentizeUrl($url);
 
         // Look for a controller within the /app directory
-        if (! $result = $this->locateControllerInApp($segments)) {
+        if (!$result = $this->locateControllerInApp($segments)) {
             // Look for a controller within the /extensions directory
             $result = $this->locateControllerInExtensions($segments);
         }
@@ -156,9 +160,10 @@ class Controller extends IlluminateController
      * This method is used internally.
      * Finds a controller with a callable action method.
      *
-     * @param  string  $controller Specifies a controller name to locate.
-     * @param  string|array  $modules Specifies a list of modules to look in.
-     * @param  string|array  $inPath Base path to search the class file.
+     * @param string $controller Specifies a controller name to locate.
+     * @param string|array $modules Specifies a list of modules to look in.
+     * @param string|array $inPath Base path to search the class file.
+     *
      * @return bool|\Admin\Classes\AdminController|\Main\Classes\MainController
      * Returns the backend controller object
      */
@@ -173,16 +178,15 @@ class Controller extends IlluminateController
             foreach ($inPath as $path) {
                 $matchPath = $path.'/%s/controllers/%s.php';
                 $controllerFile = File::existsInsensitive(sprintf($matchPath, $module, $controller));
-                if ($controllerFile && ! class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller)) {
+                if ($controllerFile && !class_exists($controllerClass = '\\'.$namespace.'\Controllers\\'.$controller)) {
                     include_once $controllerFile;
                     break 2;
                 }
             }
         }
 
-        if (! $controllerClass || ! class_exists($controllerClass)) {
+        if (!$controllerClass || !class_exists($controllerClass))
             return null;
-        }
 
         $controllerObj = App::make($controllerClass);
 
@@ -196,7 +200,8 @@ class Controller extends IlluminateController
     /**
      * Process the action name, since dashes are not supported in PHP methods.
      *
-     * @param  string  $actionName
+     * @param string $actionName
+     *
      * @return string
      */
     protected function processAction($actionName)
@@ -235,9 +240,8 @@ class Controller extends IlluminateController
             self::$segments = $segments = array_slice($segments, 4);
 
             $extensionCode = sprintf('%s.%s', $author, $extension);
-            if (ExtensionManager::instance()->isDisabled($extensionCode)) {
+            if (ExtensionManager::instance()->isDisabled($extensionCode))
                 return;
-            }
 
             if ($controllerObj = $this->locateControllerInPath(
                 $controller,
@@ -255,14 +259,12 @@ class Controller extends IlluminateController
 
     protected function pushRequestedControllerMiddleware()
     {
-        if (! App::runningInAdmin()) {
+        if (!App::runningInAdmin())
             return;
-        }
 
         $pathParts = explode('/', request()->path());
-        if (Config::get('system.adminUri', 'admin')) {
+        if (Config::get('system.adminUri', 'admin'))
             array_shift($pathParts);
-        }
 
         $path = implode('/', $pathParts);
         if ($result = $this->locateController($path)) {

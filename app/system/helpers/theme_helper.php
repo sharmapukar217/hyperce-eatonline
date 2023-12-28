@@ -8,7 +8,7 @@ use Main\Classes\ThemeManager;
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('active_theme')) {
+if (!function_exists('active_theme')) {
     /**
      * Get the active theme code of the specified domain
      *
@@ -22,11 +22,12 @@ if (! function_exists('active_theme')) {
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('parent_theme')) {
+if (!function_exists('parent_theme')) {
     /**
      * Get the parent theme code of the specified domain
      *
-     * @param  string  $theme
+     * @param string $theme
+     *
      * @return null
      */
     function parent_theme($theme)

@@ -95,9 +95,8 @@ class Statistics extends BaseDashboardWidget
 
     protected function getCardDefinition($key, $default = null)
     {
-        if (is_null($this->cardDefinition)) {
+        if (is_null($this->cardDefinition))
             $this->cardDefinition = array_get($this->listCards(), $this->getActiveCard());
-        }
 
         return array_get($this->cardDefinition, $key, $default);
     }
@@ -149,7 +148,6 @@ class Statistics extends BaseDashboardWidget
 
     /**
      * Return the total amount of lost order sales
-     *
      * @return string
      */
     protected function getTotalLostSaleSum(callable $callback)
@@ -186,6 +184,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of customers
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalCustomerSum(callable $callback)
@@ -200,6 +199,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of orders placed
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalOrderSum(callable $callback)
@@ -214,6 +214,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of completed orders
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalCompletedOrderSum(callable $callback)
@@ -229,7 +230,8 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of delivery orders
      *
-     * @param  string  $range
+     * @param string $range
+     *
      * @return int
      */
     protected function getTotalDeliveryOrderSum(callable $callback)
@@ -248,6 +250,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of collection orders
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalCollectionOrderSum(callable $callback)
@@ -266,6 +269,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of reserved tables
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalReservedTableSum(callable $callback)
@@ -281,6 +285,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of reserved table guests
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalReservedGuestSum(callable $callback)
@@ -296,6 +301,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of reservations
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalReservationSum(callable $callback)
@@ -311,6 +317,7 @@ class Statistics extends BaseDashboardWidget
     /**
      * Return the total number of completed reservations
      *
+     * @param callable $callback
      * @return int
      */
     protected function getTotalCompletedReservationSum(callable $callback)

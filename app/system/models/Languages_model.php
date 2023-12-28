@@ -31,7 +31,6 @@ class Languages_model extends Language
 
     /**
      *  List of variables that cannot be mass assigned
-     *
      * @var array
      */
     protected $guarded = [];
@@ -76,9 +75,8 @@ class Languages_model extends Language
 
         $this->restorePurgedValues();
 
-        if (array_key_exists('translations', $this->attributes)) {
-            $this->addTranslations((array) $this->attributes['translations']);
-        }
+        if (array_key_exists('translations', $this->attributes))
+            $this->addTranslations((array)$this->attributes['translations']);
     }
 
     //
@@ -88,6 +86,7 @@ class Languages_model extends Language
     /**
      * Scope a query to only include enabled language
      *
+     * @param $query
      *
      * @return $this
      */
@@ -102,20 +101,18 @@ class Languages_model extends Language
 
     public static function findByCode($code = null)
     {
-        if (! $code) {
+        if (!$code)
             return null;
-        }
 
-        if (isset(self::$localesCache[$code])) {
+        if (isset(self::$localesCache[$code]))
             return self::$localesCache[$code];
-        }
 
         return self::$localesCache[$code] = self::whereCode($code)->first();
     }
 
     public function makeDefault()
     {
-        if (! $this->status) {
+        if (!$this->status) {
             throw new ValidationException(['status' => sprintf(
                 lang('admin::lang.alert_error_set_default'), $this->name
             )]);
@@ -127,7 +124,6 @@ class Languages_model extends Language
 
     /**
      * Returns the default language defined.
-     *
      * @return self
      */
     public static function getDefault()
@@ -140,7 +136,7 @@ class Languages_model extends Language
             ->where('code', setting('default_language'))
             ->first();
 
-        if (! $defaultLanguage) {
+        if (!$defaultLanguage) {
             if ($defaultLanguage = self::isEnabled()->first()) {
                 $defaultLanguage->makeDefault();
             }
@@ -207,16 +203,14 @@ class Languages_model extends Language
     public function addTranslations($translations)
     {
         $languageId = $this->getKey();
-        if (! is_numeric($languageId)) {
+        if (!is_numeric($languageId))
             return false;
-        }
 
         foreach ($translations as $key => $translation) {
             preg_match('/^(.+)::(?:(.+?))\.(.+)+$/', $key, $matches);
 
-            if (! $matches || count($matches) !== 4) {
+            if (!$matches || count($matches) !== 4)
                 continue;
-            }
 
             [$code, $namespace, $group, $item] = $matches;
 
@@ -237,9 +231,8 @@ class Languages_model extends Language
     {
         $oldText = Lang::get("{$namespace}::{$group}.{$key}", [], $this->code);
 
-        if (strcmp($text, $oldText) === 0) {
+        if (strcmp($text, $oldText) === 0)
             return false;
-        }
 
         $translation = $this->translations()->firstOrNew([
             'group' => $group,

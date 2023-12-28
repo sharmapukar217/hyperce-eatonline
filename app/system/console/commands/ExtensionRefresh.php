@@ -14,26 +14,23 @@ class ExtensionRefresh extends Command
 
     /**
      * The console command name.
-     *
      * @var string
      */
     protected $name = 'extension:refresh';
 
     /**
      * The console command description.
-     *
      * @var string
      */
     protected $description = 'Rollback and re-migrate an existing extension.';
 
     /**
      * Execute the console command.
-     *
      * @return void
      */
     public function handle()
     {
-        if (! $this->confirmToProceed()) {
+        if (!$this->confirmToProceed()) {
             return;
         }
 
@@ -41,20 +38,21 @@ class ExtensionRefresh extends Command
         $extensionManager = ExtensionManager::instance();
 
         $extensionName = $extensionManager->getIdentifier(strtolower($extensionName));
-        if (! $extensionManager->hasExtension($extensionName)) {
+        if (!$extensionManager->hasExtension($extensionName)) {
             throw new \InvalidArgumentException(sprintf('Extension "%s" not found.', $extensionName));
         }
 
         $manager = UpdateManager::instance();
         $manager->setLogsOutput($this->output);
 
-        if ($step = (int) $this->option('step')) {
+        if ($step = (int)$this->option('step')) {
             $this->output->writeln(sprintf('<info>Rolling back extension %s...</info>', $extensionName));
             $manager->rollbackExtension($extensionName, [
                 'pretend' => $this->option('pretend'),
                 'step' => $step,
             ]);
-        } else {
+        }
+        else {
             $this->output->writeln(sprintf('<info>Purging extension %s...</info>', $extensionName));
             $manager->purgeExtension($extensionName);
 
@@ -65,7 +63,6 @@ class ExtensionRefresh extends Command
 
     /**
      * Get the console command arguments.
-     *
      * @return array
      */
     protected function getArguments()

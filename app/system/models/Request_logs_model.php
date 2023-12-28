@@ -29,13 +29,11 @@ class Request_logs_model extends Model
 
     public static function createLog($statusCode = 404)
     {
-        if (! App::hasDatabase()) {
+        if (!App::hasDatabase())
             return;
-        }
 
-        if (! setting('enable_request_log', true)) {
+        if (!setting('enable_request_log', true))
             return;
-        }
 
         $url = Request::fullUrl();
         $referrer = Request::header('referer');
@@ -46,7 +44,7 @@ class Request_logs_model extends Model
         ]);
 
         if (strlen($referrer)) {
-            $referrers = (array) $record->referrer ?: [];
+            $referrers = (array)$record->referrer ?: [];
             $referrers[] = $referrer;
             $record->referrer = $referrers;
         }
@@ -58,10 +56,11 @@ class Request_logs_model extends Model
 
     public function addLog()
     {
-        if (! $this->exists) {
+        if (!$this->exists) {
             $this->count = 1;
             $this->save();
-        } else {
+        }
+        else {
             $this->increment('count');
         }
 

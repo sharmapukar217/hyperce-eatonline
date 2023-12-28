@@ -21,10 +21,10 @@ use System\Traits\SessionMaker;
 
 class Themes extends \Admin\Classes\AdminController
 {
-    use ConfigMaker;
-    use ManagesUpdates;
-    use SessionMaker;
     use WidgetMaker;
+    use ConfigMaker;
+    use SessionMaker;
+    use ManagesUpdates;
 
     public $implement = [
         'Admin\Actions\ListController',
@@ -81,7 +81,7 @@ class Themes extends \Admin\Classes\AdminController
 
     public function edit($context, $themeCode = null)
     {
-        if (! ThemeManager::instance()->isActive($themeCode)) {
+        if (!ThemeManager::instance()->isActive($themeCode)) {
             flash()->error(lang('system::lang.themes.alert_customize_not_active'));
 
             return $this->redirect('themes');
@@ -146,7 +146,7 @@ class Themes extends \Admin\Classes\AdminController
 
             // Theme not found in filesystem
             // so delete from database
-            if (! $theme) {
+            if (!$theme) {
                 Themes_model::deleteTheme($themeCode, true);
                 flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
 
@@ -158,7 +158,8 @@ class Themes extends \Admin\Classes\AdminController
             $this->vars['themeModel'] = $model;
             $this->vars['themeObj'] = $theme;
             $this->vars['themeData'] = $model->data;
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             $this->handleError($ex);
         }
     }
@@ -216,7 +217,8 @@ class Themes extends \Admin\Classes\AdminController
     {
         if (Themes_model::deleteTheme($themeCode, post('delete_data', 1) == 1)) {
             flash()->success(sprintf(lang('admin::lang.alert_success'), 'Theme deleted '));
-        } else {
+        }
+        else {
             flash()->danger(lang('admin::lang.alert_error_try_again'));
         }
 
@@ -225,9 +227,8 @@ class Themes extends \Admin\Classes\AdminController
 
     public function listOverrideColumnValue($record, $column, $alias = null)
     {
-        if ($column->type != 'button' || $column->columnName != 'default') {
+        if ($column->type != 'button' || $column->columnName != 'default')
             return null;
-        }
 
         $attributes = $column->attributes;
 
@@ -258,7 +259,7 @@ class Themes extends \Admin\Classes\AdminController
 
     public function formFindModelObject($recordId)
     {
-        if (! strlen($recordId)) {
+        if (!strlen($recordId)) {
             throw new Exception(lang('admin::lang.form.missing_id'));
         }
 
@@ -269,7 +270,7 @@ class Themes extends \Admin\Classes\AdminController
         $this->fireEvent('admin.controller.extendFormQuery', [$query]);
         $result = $query->where('code', $recordId)->first();
 
-        if (! $result) {
+        if (!$result) {
             throw new Exception(sprintf(lang('admin::lang.form.not_found'), $recordId));
         }
 
@@ -285,13 +286,11 @@ class Themes extends \Admin\Classes\AdminController
 
     protected function buildAssetsBundle($model)
     {
-        if (! $model->getFieldsConfig()) {
+        if (!$model->getFieldsConfig())
             return;
-        }
 
-        if (! config('system.publishThemeAssetsBundle', true)) {
+        if (!config('system.publishThemeAssetsBundle', true))
             return;
-        }
 
         $loaded = false;
         $theme = $model->getTheme();
@@ -307,9 +306,8 @@ class Themes extends \Admin\Classes\AdminController
             $loaded = true;
         }
 
-        if (! $loaded) {
+        if (!$loaded)
             return;
-        }
 
         Event::listen('assets.combiner.beforePrepare', function (AssetsManager $combiner, $assets) use ($theme) {
             ThemeManager::applyAssetVariablesOnCombinerFilters(
@@ -320,7 +318,8 @@ class Themes extends \Admin\Classes\AdminController
         try {
             Artisan::call('igniter:util', ['name' => 'compile scss']);
             Artisan::call('igniter:util', ['name' => 'compile js']);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             Log::error($ex);
             flash()->error('Building assets bundle error: '.$ex->getMessage())->important();
         }

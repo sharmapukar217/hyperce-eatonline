@@ -52,7 +52,7 @@ class Countries_model extends Model
 
     public function makeDefault()
     {
-        if (! $this->status) {
+        if (!$this->status) {
             throw new ValidationException(['status' => sprintf(
                 lang('admin::lang.alert_error_set_default'), $this->country_name
             )]);
@@ -64,7 +64,6 @@ class Countries_model extends Model
 
     /**
      * Returns the default currency defined.
-     *
      * @return self
      */
     public static function getDefault()
@@ -77,7 +76,7 @@ class Countries_model extends Model
             ->where('country_id', setting('country_id'))
             ->first();
 
-        if (! $defaultCountry) {
+        if (!$defaultCountry) {
             if ($defaultCountry = self::isEnabled()->first()) {
                 $defaultCountry->makeDefault();
             }
@@ -92,7 +91,6 @@ class Countries_model extends Model
 
     /**
      * Scope a query to only include enabled country
-     *
      * @return $this
      */
     public function scopeIsEnabled($query)

@@ -1,5 +1,4 @@
 <?php
-
 App::before(function () {
     /*
      * Register Main app routes

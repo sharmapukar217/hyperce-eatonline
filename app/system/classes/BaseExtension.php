@@ -38,7 +38,6 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Returns information about this extension
-     *
      * @return array
      */
     public function extensionMeta()
@@ -50,7 +49,6 @@ class BaseExtension extends ServiceProvider
      * Registers any front-end components implemented in this extension.
      * The components must be returned in the following format:
      * ['path/to/class' => ['code' => 'component_code']]
-     *
      * @return array
      */
     public function registerComponents()
@@ -62,7 +60,6 @@ class BaseExtension extends ServiceProvider
      * Registers any payment gateway implemented in this extension.
      * The payment gateway must be returned in the following format:
      * ['path/to/class' => 'alias']
-     *
      * @return array
      */
     public function registerPaymentGateways()
@@ -72,7 +69,6 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers back-end navigation menu items for this extension.
-     *
      * @return array
      */
     public function registerNavigation()
@@ -82,7 +78,6 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers any back-end permissions used by this extension.
-     *
      * @return array
      */
     public function registerPermissions()
@@ -92,7 +87,6 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers the back-end setting links used by this extension.
-     *
      * @return array
      */
     public function registerSettings()
@@ -103,7 +97,7 @@ class BaseExtension extends ServiceProvider
     /**
      * Registers scheduled tasks that are executed on a regular basis.
      *
-     * @param  string  $schedule
+     * @param string $schedule
      * @return void
      */
     public function registerSchedule($schedule)
@@ -112,7 +106,6 @@ class BaseExtension extends ServiceProvider
 
     /**
      * Registers any dashboard widgets provided by this extension.
-     *
      * @return array
      */
     public function registerDashboardWidgets()
@@ -125,7 +118,6 @@ class BaseExtension extends ServiceProvider
      * The widgets must be returned in the following format:
      * ['className1' => 'alias'],
      * ['className2' => 'anotherAlias']
-     *
      * @return array
      */
     public function registerFormWidgets()
@@ -140,7 +132,6 @@ class BaseExtension extends ServiceProvider
      *  'igniter.demo::mail.registration' => 'Registration email to customer.',
      * ]
      * The array key will be used as the template code
-     *
      * @return array
      */
     public function registerMailTemplates()
@@ -151,8 +142,8 @@ class BaseExtension extends ServiceProvider
     /**
      * Registers a new console (artisan) command
      *
-     * @param  string  $key The command name
-     * @param  string  $class The command class
+     * @param string $key The command name
+     * @param string $class The command class
      * @return void
      */
     public function registerConsoleCommand($key, $class)
@@ -168,7 +159,6 @@ class BaseExtension extends ServiceProvider
      * Read configuration from Config file
      *
      * @return array|bool
-     *
      * @throws SystemException
      */
     protected function getConfigFromFile()
@@ -182,15 +172,17 @@ class BaseExtension extends ServiceProvider
 
         if (File::exists($configFile = $configPath.'/extension.json')) {
             $config = json_decode(File::get($configFile), true) ?? [];
-        } elseif (File::exists($configFile = $configPath.'/composer.json')) {
+        }
+        elseif (File::exists($configFile = $configPath.'/composer.json')) {
             $config = ComposerManager::instance()->getConfig($configPath);
-        } else {
+        }
+        else {
             throw new SystemException("The configuration file for extension <b>{$className}</b> does not exist. ".
                 'Create the file or override extensionMeta() method in the extension class.');
         }
 
         foreach (['code', 'name', 'description', 'author', 'icon'] as $item) {
-            if (! array_key_exists($item, $config)) {
+            if (!array_key_exists($item, $config)) {
                 throw new SystemException(sprintf(
                     Lang::get('system::lang.missing.config_key'),
                     $item, File::localToPublic($configFile)
@@ -205,21 +197,17 @@ class BaseExtension extends ServiceProvider
     {
         $composer = json_decode(File::get($configFile), true) ?? [];
 
-        if (! $config = array_get($composer, 'extra.tastyigniter-extension', [])) {
+        if (!$config = array_get($composer, 'extra.tastyigniter-extension', []))
             return $config;
-        }
 
-        if (array_key_exists('description', $composer)) {
+        if (array_key_exists('description', $composer))
             $config['description'] = $composer['description'];
-        }
 
-        if (array_key_exists('authors', $composer)) {
+        if (array_key_exists('authors', $composer))
             $config['author'] = $composer['authors'][0]['name'];
-        }
 
-        if (! array_key_exists('homepage', $config) && array_key_exists('homepage', $composer)) {
+        if (!array_key_exists('homepage', $config) && array_key_exists('homepage', $composer))
             $config['homepage'] = $composer['homepage'];
-        }
 
         return $config;
     }

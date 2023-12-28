@@ -24,7 +24,7 @@ trait VerifiesCsrfToken
         return new Cookie(
             'XSRF-TOKEN',
             Session::token(),
-            Carbon::now()->addMinutes((int) $config['lifetime'])->getTimestamp(),
+            Carbon::now()->addMinutes((int)$config['lifetime'])->getTimestamp(),
             $config['path'],
             $config['domain'],
             $config['secure'],
@@ -36,17 +36,14 @@ trait VerifiesCsrfToken
 
     protected function verifyCsrfToken()
     {
-        if (! config('system.enableCsrfProtection', true) || ! $this->enableCsrfProtection) {
+        if (!config('system.enableCsrfProtection', true) || !$this->enableCsrfProtection)
             return true;
-        }
 
-        if (in_array(Request::method(), ['HEAD', 'GET', 'OPTIONS'])) {
+        if (in_array(Request::method(), ['HEAD', 'GET', 'OPTIONS']))
             return true;
-        }
 
-        if (! strlen($token = $this->getCsrfTokenFromRequest())) {
+        if (!strlen($token = $this->getCsrfTokenFromRequest()))
             return false;
-        }
 
         return is_string(Request::session()->token())
             && is_string($token)
@@ -62,10 +59,11 @@ trait VerifiesCsrfToken
     {
         $token = Request::input('_token') ?: Request::header('X-CSRF-TOKEN');
 
-        if (! $token && $header = Request::header('X-XSRF-TOKEN')) {
+        if (!$token && $header = Request::header('X-XSRF-TOKEN')) {
             try {
                 $token = Crypt::decrypt($header, static::serialized());
-            } catch (DecryptException $e) {
+            }
+            catch (DecryptException $e) {
                 $token = '';
             }
         }

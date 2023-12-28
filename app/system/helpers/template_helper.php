@@ -3,10 +3,9 @@
 /**
  * Template helper functions
  */
-if (! function_exists('page')) {
+if (!function_exists('page')) {
     /**
      * Get the page content
-     *
      * @return string
      */
     function page()
@@ -15,11 +14,13 @@ if (! function_exists('page')) {
     }
 }
 
-if (! function_exists('content')) {
+if (!function_exists('content')) {
     /**
      * Load a content template file
      *
-     * @param  string  $content
+     * @param string $content
+     * @param array $data
+     *
      * @return string
      */
     function content($content = '', array $data = [])
@@ -28,11 +29,13 @@ if (! function_exists('content')) {
     }
 }
 
-if (! function_exists('partial')) {
+if (!function_exists('partial')) {
     /**
      * Load a partial template file
      *
-     * @param  string  $partial
+     * @param string $partial
+     * @param array $data
+     *
      * @return string
      */
     function partial($partial = '', array $data = [])
@@ -41,11 +44,12 @@ if (! function_exists('partial')) {
     }
 }
 
-if (! function_exists('has_component')) {
+if (!function_exists('has_component')) {
     /**
      * Check if a component is loaded
      *
-     * @param  string  $component
+     * @param string $component
+     *
      * @return string
      */
     function has_component($component = '')
@@ -54,11 +58,13 @@ if (! function_exists('has_component')) {
     }
 }
 
-if (! function_exists('component')) {
+if (!function_exists('component')) {
     /**
      * Check if Partial Area has rendered components
      *
-     * @param  string  $component
+     * @param string $component
+     * @param $params
+     *
      * @return string
      */
     function component($component = '', array $params = [])
@@ -67,10 +73,9 @@ if (! function_exists('component')) {
     }
 }
 
-if (! function_exists('get_title')) {
+if (!function_exists('get_title')) {
     /**
      * Get page title html tag
-     *
      * @return    string
      */
     function get_title()

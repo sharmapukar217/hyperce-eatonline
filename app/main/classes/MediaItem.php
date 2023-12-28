@@ -9,15 +9,10 @@ use System\Models\Settings_model;
 class MediaItem
 {
     const TYPE_FILE = 'file';
-
     const TYPE_FOLDER = 'folder';
-
     const FILE_TYPE_IMAGE = 'image';
-
     const FILE_TYPE_DOCUMENT = 'document';
-
     const FILE_TYPE_VIDEO = 'video';
-
     const FILE_TYPE_AUDIO = 'audio';
 
     /**
@@ -74,11 +69,11 @@ class MediaItem
     protected static $audioExtensions;
 
     /**
-     * @param  string  $path
-     * @param  int  $size
-     * @param  int  $lastModified
-     * @param  string  $type
-     * @param  string  $publicUrl
+     * @param string $path
+     * @param int $size
+     * @param int $lastModified
+     * @param string $type
+     * @param string $publicUrl
      */
     public function __construct($path, $size, $lastModified, $type, $publicUrl)
     {
@@ -101,45 +96,37 @@ class MediaItem
 
     public function getFileType()
     {
-        if (! $this->isFile()) {
+        if (!$this->isFile()) {
             return null;
         }
 
-        if (! self::$imageExtensions) {
+        if (!self::$imageExtensions)
             self::$imageExtensions = array_map('strtolower', Settings_model::imageExtensions());
-        }
 
-        if (! self::$audioExtensions) {
+        if (!self::$audioExtensions)
             self::$audioExtensions = array_map('strtolower', Settings_model::audioExtensions());
-        }
 
-        if (! self::$videoExtensions) {
+        if (!self::$videoExtensions)
             self::$videoExtensions = array_map('strtolower', Settings_model::videoExtensions());
-        }
 
         $extension = pathinfo($this->path, PATHINFO_EXTENSION);
-        if (! strlen($extension)) {
+        if (!strlen($extension))
             return self::FILE_TYPE_DOCUMENT;
-        }
 
-        if (in_array($extension, self::$imageExtensions)) {
+        if (in_array($extension, self::$imageExtensions))
             return self::FILE_TYPE_IMAGE;
-        }
 
-        if (in_array($extension, self::$audioExtensions)) {
+        if (in_array($extension, self::$audioExtensions))
             return self::FILE_TYPE_AUDIO;
-        }
 
-        if (in_array($extension, self::$videoExtensions)) {
+        if (in_array($extension, self::$videoExtensions))
             return self::FILE_TYPE_VIDEO;
-        }
 
         return self::FILE_TYPE_DOCUMENT;
     }
 
     /**
      * Returns the item size as string.
-     *
      * @return string Returns the size as string.
      */
     public function sizeToString()
@@ -151,12 +138,11 @@ class MediaItem
 
     /**
      * Returns the item last modification date as string.
-     *
      * @return string Returns the item's last modification date as string.
      */
     public function lastModifiedAsString()
     {
-        if (! ($date = $this->lastModified)) {
+        if (!($date = $this->lastModified)) {
             return null;
         }
 

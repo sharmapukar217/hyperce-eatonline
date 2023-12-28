@@ -68,7 +68,7 @@ class Activities_model extends Activity
 
         $query->whereNotNull('subject_id');
 
-        if (! is_array($sort)) {
+        if (!is_array($sort)) {
             $sort = [$sort];
         }
 
@@ -83,9 +83,8 @@ class Activities_model extends Activity
             }
         }
 
-        if ($pageLimit) {
+        if ($pageLimit)
             return $query->take($pageLimit);
-        }
 
         return $query;
     }

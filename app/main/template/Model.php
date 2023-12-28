@@ -35,7 +35,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * The "booting" method of the model.
-     *
      * @return void
      */
     protected static function boot()
@@ -46,7 +45,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Boot all of the bootable traits on the model.
-     *
      * @return void
      */
     protected static function bootDefaultTheme()
@@ -65,9 +63,10 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      * Loads the object from a file.
      * This method is used in the admin. It doesn't use any caching.
      *
-     * @param  \Main\Classes\Theme  $theme Specifies the theme the object belongs to.
-     * @param  string  $fileName Specifies the file name, with the extension.
+     * @param \Main\Classes\Theme $theme Specifies the theme the object belongs to.
+     * @param string $fileName Specifies the file name, with the extension.
      * The file name can contain only alphanumeric symbols, dashes and dots.
+     *
      * @return mixed Returns a Template object instance or null if the object wasn't found.
      */
     public static function load($theme, $fileName)
@@ -79,8 +78,9 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      * Loads the object from a cache.
      * This method is used by the main in the runtime. If the cache is not found, it is created.
      *
-     * @param  \Main\Classes\Theme  $theme Specifies the theme the object belongs to.
-     * @param  string  $fileName Specifies the file name, with the extension.
+     * @param \Main\Classes\Theme $theme Specifies the theme the object belongs to.
+     * @param string $fileName Specifies the file name, with the extension.
+     *
      * @return mixed Returns a Template object instance or null if the object wasn't found.
      */
     public static function loadCached($theme, $fileName)
@@ -94,8 +94,9 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
      * Returns the list of objects in the specified theme.
      * This method is used internally by the system.
      *
-     * @param  \Main\Classes\Theme  $theme Specifies a parent theme.
-     * @param  bool  $skipCache Indicates if objects should be reloaded from the disk bypassing the cache.
+     * @param \Main\Classes\Theme $theme Specifies a parent theme.
+     * @param bool $skipCache Indicates if objects should be reloaded from the disk bypassing the cache.
+     *
      * @return array|\Illuminate\Support\Collection
      */
     public static function listInTheme(Theme $theme, $skipCache = false)
@@ -143,7 +144,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Returns the unique id of this object.
      * ex. account/login.blade.php => account-login
-     *
      * @return string
      */
     public function getId()
@@ -155,14 +155,12 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Returns the theme this object belongs to.
-     *
      * @return \Main\Classes\Theme
      */
     public function getThemeAttribute($value = null)
     {
-        if (! is_null($value)) {
+        if (!is_null($value))
             return $value;
-        }
 
         if ($this->themeCache !== null) {
             return $this->themeCache;
@@ -177,7 +175,8 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Returns the local file path to the template.
      *
-     * @param  string  $fileName
+     * @param string $fileName
+     *
      * @return string
      */
     public function getFilePath($fileName = null)
@@ -188,16 +187,14 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
         $fileName = $this->getTypeDirName().'/'.$fileName;
 
-        if ($this->theme->hasParent() && File::exists($this->theme->getParentPath().'/'.$fileName)) {
+        if ($this->theme->hasParent() && File::exists($this->theme->getParentPath().'/'.$fileName))
             return $this->theme->getParentPath().'/'.$fileName;
-        }
 
         return $this->theme->getPath().'/'.$fileName;
     }
 
     /**
      * Returns the file name.
-     *
      * @return string
      */
     public function getFileName()
@@ -207,7 +204,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Returns the file name without the extension.
-     *
      * @return string
      */
     public function getBaseFileName()
@@ -217,7 +213,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Returns the file content.
-     *
      * @return string
      */
     public function getContent()
@@ -227,7 +222,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Gets the markup section of a template
-     *
      * @return string The template source code
      */
     public function getMarkup()
@@ -237,7 +231,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Gets the code section of a template
-     *
      * @return string The template source code
      */
     public function getCode()
@@ -247,7 +240,6 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
 
     /**
      * Returns the key used by the Template cache.
-     *
      * @return string
      */
     public function getTemplateCacheKey()
@@ -262,7 +254,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Implements getter functionality for visible properties defined in
      * the settings section or view bag array.
-     *
+     * @param $name
      * @return mixed
      */
     public function __get($name)
@@ -277,8 +269,8 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Dynamically set attributes on the model.
      *
-     * @param  string  $key
-     * @param  mixed  $value
+     * @param string $key
+     * @param mixed $value
      * @return void
      */
     public function __set($key, $value)
@@ -293,7 +285,7 @@ class Model extends \Igniter\Flame\Pagic\Model implements TemplateSource
     /**
      * Determine if an attribute exists on the object.
      *
-     * @param  string  $key
+     * @param string $key
      * @return bool
      */
     public function __isset($key)

@@ -1,5 +1,4 @@
 <?php
-
 $config['list']['columns'] = [
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',

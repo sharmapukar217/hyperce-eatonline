@@ -32,7 +32,7 @@ class ServiceProvider extends AppServiceProvider
 
         $this->bootMenuItemEvents();
 
-        if (! $this->app->runningInAdmin()) {
+        if (!$this->app->runningInAdmin()) {
             $this->resolveFlashSessionKey();
         }
     }
@@ -48,11 +48,12 @@ class ServiceProvider extends AppServiceProvider
 
         $this->registerComponents();
 
-        if (! $this->app->runningInAdmin()) {
+        if (!$this->app->runningInAdmin()) {
             $this->registerSingletons();
             $this->registerAssets();
             $this->registerCombinerEvent();
-        } else {
+        }
+        else {
             $this->registerFormWidgets();
             $this->registerPermissions();
             $this->registerSystemSettings();
@@ -118,9 +119,8 @@ class ServiceProvider extends AppServiceProvider
         });
 
         Event::listen('pages.menuitem.resolveItem', function ($item, $url, $theme) {
-            if ($item->type == 'theme-page') {
+            if ($item->type == 'theme-page')
                 return Page::resolveMenuItem($item, $url, $theme);
-            }
         });
     }
 

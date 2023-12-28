@@ -55,7 +55,7 @@ class HubManager
     {
         $cacheKey = $this->getCacheKey('updates', $itemNames);
 
-        if ($force || ! $response = Cache::get($cacheKey)) {
+        if ($force || !$response = Cache::get($cacheKey)) {
             $response = $this->requestRemoteData('core/apply', [
                 'items' => $itemNames,
                 'include' => 'tags',
@@ -79,19 +79,17 @@ class HubManager
 
     public function buildMetaArray($response)
     {
-        if (isset($response['type'])) {
+        if (isset($response['type']))
             $response = ['items' => [$response]];
-        }
 
         if (isset($response['items'])) {
             $extensions = [];
             foreach ($response['items'] as $item) {
                 if ($item['type'] == 'extension' &&
-                    (! ExtensionManager::instance()->findExtension($item['type']) || ExtensionManager::instance()->isDisabled($item['code']))
+                    (!ExtensionManager::instance()->findExtension($item['type']) || ExtensionManager::instance()->isDisabled($item['code']))
                 ) {
-                    if (isset($item['tags'])) {
+                    if (isset($item['tags']))
                         arsort($item['tags']);
-                    }
 
                     $extensions[$item['code']] = $item;
                 }
@@ -116,7 +114,8 @@ class HubManager
         $carteKey = params('carte_key', '');
         try {
             $carteKey = decrypt($carteKey);
-        } catch (Exception $e) {
+        }
+        catch (Exception $e) {
         }
 
         return strlen($carteKey) ? $carteKey : md5('NULL');
@@ -129,7 +128,7 @@ class HubManager
 
     protected function requestRemoteData($url, $params = [])
     {
-        if (! function_exists('curl_init')) {
+        if (!function_exists('curl_init')) {
             echo 'cURL PHP extension required.'.PHP_EOL;
             exit(1);
         }
@@ -141,25 +140,25 @@ class HubManager
             $result = curl_exec($curl);
 
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($httpCode == 500) {
+            if ($httpCode == 500)
                 throw new ApplicationException('Server error try again');
-            }
 
             curl_close($curl);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 
         $response = null;
         try {
             $response = @json_decode($result, true);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
         }
 
-        if (isset($response['message']) && ! in_array($httpCode, [200, 201])) {
-            if (isset($response['errors'])) {
+        if (isset($response['message']) && !in_array($httpCode, [200, 201])) {
+            if (isset($response['errors']))
                 Log::debug('Server validation errors: '.print_r($response['errors'], true));
-            }
 
             throw new ApplicationException($response['message']);
         }
@@ -169,14 +168,13 @@ class HubManager
 
     protected function requestRemoteFile($url, array $params, $filePath, $fileHash)
     {
-        if (! function_exists('curl_init')) {
+        if (!function_exists('curl_init')) {
             echo 'cURL PHP extension required.'.PHP_EOL;
             exit(1);
         }
 
-        if (! is_dir($fileDir = dirname($filePath))) {
+        if (!is_dir($fileDir = dirname($filePath)))
             throw new ApplicationException("Downloading failed, download path ({$filePath}) not found.");
-        }
 
         try {
             $curl = $this->prepareRequest($url, $params);
@@ -185,13 +183,13 @@ class HubManager
             curl_exec($curl);
 
             $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
-            if ($httpCode == 500) {
+            if ($httpCode == 500)
                 throw new ApplicationException('Server error try again');
-            }
 
             curl_close($curl);
             fclose($fileStream);
-        } catch (Exception $ex) {
+        }
+        catch (Exception $ex) {
             throw new ApplicationException('Server responded with error: '.$ex->getMessage());
         }
 
